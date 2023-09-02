@@ -14,6 +14,8 @@ const Home = () => {
     loadFonts();
   }, []);
 
+  //comment
+
   return (
     <View style={styles.container}>
       <Text style={styles.name}>Hello John!</Text>
