@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
 
-const SuccessModal = ({ isVisible, closeModal }) => {
+const Reachoutsuccessmodal = ({ isVisible, closeModal }) => {
   const navigation = useNavigation();
   return (
     <Modal
@@ -13,7 +13,7 @@ const SuccessModal = ({ isVisible, closeModal }) => {
     >
       <View style={styles.popup}>
         <View style={styles.content}>
-          <Image source={require("../../assets/images/checkmark.png")} />
+          <Image source={require("../../../../assets/images/checkmark.png")} />
           <Text
             style={{
               marginBottom: 8,
@@ -33,7 +33,8 @@ const SuccessModal = ({ isVisible, closeModal }) => {
               textAlign: "center",
             }}
           >
-            You have successfully reset and created a new password!
+            You have successfully sent an emergency message. Someone will reach
+            out to you now!
           </Text>
           <Pressable
             onPress={() => navigation.navigate("main")}
@@ -47,7 +48,7 @@ const SuccessModal = ({ isVisible, closeModal }) => {
   );
 };
 
-export default SuccessModal;
+export default Reachoutsuccessmodal;
 
 const styles = StyleSheet.create({
   popup: {

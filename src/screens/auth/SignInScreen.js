@@ -5,12 +5,16 @@ import {
   TextInput,
   Image,
   Pressable,
-} from 'react-native';
-import React, { useState } from 'react';
-import { Ionicons } from '@expo/vector-icons';
-import { SafeAreaView } from 'react-native-safe-area-context';
+} from "react-native";
+import React, { useState } from "react";
+import { Ionicons } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
+import Google from "../../components/svgs/Google";
+import Ordivider from "../../components/Ordivider";
 
 const SignInScreen = () => {
+  const navigation = useNavigation();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
@@ -42,22 +46,26 @@ const SignInScreen = () => {
             <Pressable onPress={togglePasswordVisibility}>
               <Ionicons
                 style={{ fontSize: 20 }}
-                name={isPasswordVisible ? 'eye' : 'eye-off'}
+                name={isPasswordVisible ? "eye" : "eye-off"}
               />
             </Pressable>
           </View>
-          <View style={styles.blackbtn}>
+          <Pressable
+            onPress={() => navigation.navigate("forgot")}
+            style={styles.blackbtn}
+          >
             <Text style={styles.btntext}>SiGN In</Text>
-          </View>
+          </Pressable>
         </View>
         <View style={{ marginVertical: 24 }}>
           <Text style={styles.forgot}>Forgot Password?</Text>
         </View>
         <View style={styles.orCon}>
-          <Image source={require('../../../assets/images/or.png')} />
+          <Ordivider />
         </View>
         <View style={styles.googlecon}>
-          <Image source={require('../../../assets/images/signin.png')} />
+          <Google />
+          <Text style={styles.googletext}>SIGN IN WITH GOOGLE</Text>
         </View>
       </View>
       <View style={styles.account}>
@@ -72,37 +80,37 @@ export default SignInScreen;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
-    flexDirection: 'column',
+    backgroundColor: "#fff",
+    flexDirection: "column",
     flex: 1,
   },
   innercon: {
     padding: 16,
   },
   blackbtn: {
-    display: 'flex',
+    display: "flex",
     paddingVertical: 18,
     paddingHorizontal: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#0D0D0D',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#0D0D0D",
   },
   btntext: {
-    color: '#FFF',
-    textAlign: 'center',
+    color: "#FFF",
+    textAlign: "center",
     fontSize: 12,
-    fontFamily: 'Lexend',
-    fontStyle: 'normal',
-    fontWeight: 700,
+    fontFamily: "Lexend",
+    fontStyle: "normal",
+    fontWeight: "700",
     lineHeight: 20,
-    textTransform: 'uppercase',
+    textTransform: "uppercase",
   },
   passwordbox: {
-    display: 'flex',
-    flexDirection: 'row',
-    backgroundColor: '#F8F8F8',
-    borderBottomColor: '#E6E5E5',
-    borderBottomStyle: 'solid',
+    display: "flex",
+    flexDirection: "row",
+    backgroundColor: "#F8F8F8",
+    borderBottomColor: "#E6E5E5",
+    borderBottomStyle: "solid",
     borderBottomWidth: 1,
     paddingVertical: 18,
     paddingHorizontal: 16,
@@ -113,81 +121,91 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   textbox: {
-    backgroundColor: '#F8F8F8',
-    borderBottomColor: '#E6E5E5',
-    borderBottomStyle: 'solid',
+    backgroundColor: "#F8F8F8",
+    borderBottomColor: "#E6E5E5",
+    borderBottomStyle: "solid",
     borderBottomWidth: 1,
     paddingVertical: 18,
     paddingHorizontal: 16,
     marginBottom: 16,
   },
   orCon: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
     marginVertical: 24,
   },
   googlecon: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    display: "flex",
+    flexDirection: "row",
+    gap: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 24,
+    paddingVertical: 18,
+    borderWidth: 1,
+    borderColor: "#D9D9D9",
+  },
+  googletext: {
+    fontFamily: "Lexend",
+    fontSize: 12,
+    fontWeight: "700",
   },
   options: {
-    display: 'flex',
-    justifyContent: 'center',
-    gap: 24,
+    display: "flex",
+    justifyContent: "center",
+    gap: 4,
     marginBottom: 24,
   },
   account: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
     // justifyContent: 'center',
     gap: 5,
-    marginTop: 'auto',
-    backgroundColor: '#F8F8F8',
+    marginTop: "auto",
+    backgroundColor: "#F8F8F8",
     paddingVertical: 24,
     paddingHorizontal: 16,
   },
   already: {
-    color: '#0D0D0D',
+    color: "#0D0D0D",
     fontSize: 14,
-    // fontFamily: 'Lexend',
-    fontStyle: 'normal',
-    fontWeight: '300',
+    fontFamily: "Lexend",
+    fontStyle: "normal",
+    fontWeight: "300",
     lineHeight: 20,
   },
   forgot: {
-    color: '#0059FF',
+    color: "#0059FF",
     fontSize: 12,
-    // fontFamily: 'Lexend',
-    fontStyle: 'normal',
-    fontWeight: '600',
-    textTransform: 'uppercase',
+    fontFamily: "Lexend",
+    fontWeight: "600",
+    textTransform: "uppercase",
     lineHeight: 20,
   },
   welcome: {
-    color: '#0D0D0D',
+    color: "#0D0D0D",
     fontSize: 24,
-    // fontFamily: 'Lexend',
-    fontStyle: 'normal',
-    fontWeight: '500',
+    fontFamily: "clashDisplaymedium",
+    fontStyle: "normal",
+    fontWeight: "500",
     lineHeight: 32,
   },
   subtitle: {
-    color: '#525252',
+    color: "#525252",
     fontSize: 14,
-    // fontFamily: 'Lexend',
-    fontStyle: 'normal',
-    fontWeight: '300',
+    fontFamily: "Lexend",
+    fontStyle: "normal",
+    fontWeight: "300",
     lineHeight: 20,
   },
   signin: {
-    color: '#0059FF',
+    color: "#0059FF",
     fontSize: 12,
-    // fontFamily: 'Lexend',
-    fontStyle: 'normal',
-    fontWeight: '600',
+    fontFamily: "Lexend",
+    fontStyle: "normal",
+    fontWeight: "600",
     lineHeight: 20,
   },
 });

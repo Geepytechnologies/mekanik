@@ -5,12 +5,16 @@ import {
   TextInput,
   Image,
   Pressable,
-} from 'react-native';
-import React, { useState } from 'react';
-import { Ionicons } from '@expo/vector-icons';
-import { SafeAreaView } from 'react-native-safe-area-context';
+} from "react-native";
+import React, { useState } from "react";
+import { Ionicons } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
+import Google from "../../components/svgs/Google";
+import Ordivider from "../../components/Ordivider";
 
 const SignUpScreen = () => {
+  const navigation = useNavigation();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
@@ -20,7 +24,7 @@ const SignUpScreen = () => {
       <View style={styles.innercon}>
         <View style={styles.options}>
           <View style={styles.option1}>
-            <Text style={{ fontWeight: '500', fontSize: 14, color: '#0D0D0D' }}>
+            <Text style={{ fontWeight: "500", fontSize: 14, color: "#0D0D0D" }}>
               Car Owner
             </Text>
           </View>
@@ -53,19 +57,23 @@ const SignUpScreen = () => {
             <Pressable onPress={togglePasswordVisibility}>
               <Ionicons
                 style={{ fontSize: 20 }}
-                name={isPasswordVisible ? 'eye' : 'eye-off'}
+                name={isPasswordVisible ? "eye" : "eye-off"}
               />
             </Pressable>
           </View>
-          <View style={styles.blackbtn}>
+          <Pressable
+            onPress={() => navigation.navigate("signIn")}
+            style={styles.blackbtn}
+          >
             <Text style={styles.btntext}>CREATE ACCOUNT</Text>
-          </View>
+          </Pressable>
         </View>
         <View style={styles.orCon}>
-          <Image source={require('../../../assets/images/or.png')} />
+          <Ordivider />
         </View>
         <View style={styles.googlecon}>
-          <Image source={require('../../../assets/images/googlesignup.png')} />
+          <Google />
+          <Text style={styles.googletext}>SIGN UP WITH GOOGLE</Text>
         </View>
       </View>
       <View style={styles.account}>
@@ -80,37 +88,37 @@ export default SignUpScreen;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
-    flexDirection: 'column',
+    backgroundColor: "#fff",
+    flexDirection: "column",
     flex: 1,
   },
   innercon: {
     padding: 16,
   },
   blackbtn: {
-    display: 'flex',
+    display: "flex",
     paddingVertical: 18,
     paddingHorizontal: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#0D0D0D',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#0D0D0D",
   },
   btntext: {
-    color: '#FFF',
-    textAlign: 'center',
+    color: "#FFF",
+    textAlign: "center",
     fontSize: 12,
-    fontFamily: 'Lexend',
-    fontStyle: 'normal',
+    fontFamily: "Lexend",
+    fontStyle: "normal",
     fontWeight: 700,
     lineHeight: 20,
-    textTransform: 'uppercase',
+    textTransform: "uppercase",
   },
   passwordbox: {
-    display: 'flex',
-    flexDirection: 'row',
-    backgroundColor: '#F8F8F8',
-    borderBottomColor: '#E6E5E5',
-    borderBottomStyle: 'solid',
+    display: "flex",
+    flexDirection: "row",
+    backgroundColor: "#F8F8F8",
+    borderBottomColor: "#E6E5E5",
+    borderBottomStyle: "solid",
     borderBottomWidth: 1,
     paddingVertical: 18,
     paddingHorizontal: 16,
@@ -121,70 +129,81 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   textbox: {
-    backgroundColor: '#F8F8F8',
-    borderBottomColor: '#E6E5E5',
-    borderBottomStyle: 'solid',
+    backgroundColor: "#F8F8F8",
+    borderBottomColor: "#E6E5E5",
+    borderBottomStyle: "solid",
     borderBottomWidth: 1,
     paddingVertical: 18,
     paddingHorizontal: 16,
     marginBottom: 16,
+    fontFamily: "Lexend",
   },
   orCon: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
     marginVertical: 24,
   },
   googlecon: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    display: "flex",
+    flexDirection: "row",
+    gap: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 24,
+    paddingVertical: 18,
+    borderWidth: 1,
+    borderColor: "#D9D9D9",
+  },
+  googletext: {
+    fontFamily: "Lexend",
+    fontSize: 12,
+    fontWeight: 700,
   },
   options: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
     gap: 24,
     marginBottom: 24,
   },
   option1: {
-    borderBottomColor: '#0059FF',
-    borderBottomStyle: 'solid',
+    borderBottomColor: "#0059FF",
+    borderBottomStyle: "solid",
     borderBottomWidth: 4,
     paddingBottom: 8,
   },
   option2: {
-    borderBottomColor: '#0059FF',
-    borderBottomStyle: 'solid',
+    borderBottomColor: "#0059FF",
+    borderBottomStyle: "solid",
     borderBottomWidth: 0,
     paddingBottom: 8,
   },
   account: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
     // justifyContent: 'center',
     gap: 5,
-    marginTop: 'auto',
-    backgroundColor: '#F8F8F8',
+    marginTop: "auto",
+    backgroundColor: "#F8F8F8",
     paddingVertical: 24,
     paddingHorizontal: 16,
   },
   already: {
-    color: '#0D0D0D',
+    color: "#0D0D0D",
     fontSize: 14,
-    // fontFamily: 'Lexend',
-    fontStyle: 'normal',
-    fontWeight: '300',
+    fontFamily: "Lexend",
+    fontStyle: "normal",
+    fontWeight: "300",
     lineHeight: 20,
   },
   signin: {
-    color: '#0059FF',
+    color: "#0059FF",
     fontSize: 12,
-    // fontFamily: 'Lexend',
-    fontStyle: 'normal',
-    fontWeight: '600',
+    fontFamily: "Lexend",
+    fontStyle: "normal",
+    fontWeight: "600",
     lineHeight: 20,
   },
 });
