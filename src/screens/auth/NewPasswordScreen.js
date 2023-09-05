@@ -13,8 +13,14 @@ import SuccessModal from "../../components/SuccessModal";
 
 const NewPasswordScreen = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
+    useState(false);
+
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
+  };
+  const toggleConfirmPasswordVisibility = () => {
+    setIsConfirmPasswordVisible(!isConfirmPasswordVisible);
   };
   const [isModalVisible, setModalVisible] = useState(false);
 
@@ -37,6 +43,7 @@ const NewPasswordScreen = () => {
               style={styles.passwordboxinput}
               placeholder="Password"
               keyboardType="default"
+              secureTextEntry={!isPasswordVisible}
             />
             <Pressable onPress={togglePasswordVisibility}>
               <Ionicons
@@ -50,11 +57,12 @@ const NewPasswordScreen = () => {
               style={styles.passwordboxinput}
               placeholder="Confirm Password"
               keyboardType="default"
+              secureTextEntry={!isConfirmPasswordVisible}
             />
-            <Pressable onPress={togglePasswordVisibility}>
+            <Pressable onPress={toggleConfirmPasswordVisibility}>
               <Ionicons
                 style={{ fontSize: 20 }}
-                name={isPasswordVisible ? "eye" : "eye-off"}
+                name={isConfirmPasswordVisible ? "eye" : "eye-off"}
               />
             </Pressable>
           </View>
@@ -93,8 +101,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 12,
     fontStyle: "normal",
-    fontFamily: "Lexend",
-    fontWeight: 700,
+    fontFamily: "Lexend700",
     lineHeight: 20,
     textTransform: "uppercase",
   },
@@ -136,17 +143,15 @@ const styles = StyleSheet.create({
   subtitle: {
     color: "#525252",
     fontSize: 14,
-    fontFamily: "Lexend",
+    fontFamily: "Lexend300",
     fontStyle: "normal",
-    fontWeight: "300",
     lineHeight: 20,
   },
   signin: {
     color: "#0059FF",
     fontSize: 12,
-    fontFamily: "Lexend",
+    fontFamily: "Lexend600",
     fontStyle: "normal",
-    fontWeight: "600",
     lineHeight: 20,
   },
 });

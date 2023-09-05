@@ -13,10 +13,7 @@ import { useNavigation } from "@react-navigation/native";
 
 const ResetPasswordScreen = () => {
   const navigation = useNavigation();
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const togglePasswordVisibility = () => {
-    setIsPasswordVisible(!isPasswordVisible);
-  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.innercon}>
@@ -70,9 +67,8 @@ const styles = StyleSheet.create({
     color: "#FFF",
     textAlign: "center",
     fontSize: 12,
-    fontFamily: "Lexend",
+    fontFamily: "Lexend700",
     fontStyle: "normal",
-    fontWeight: 700,
     lineHeight: 20,
     textTransform: "uppercase",
   },
@@ -99,9 +95,8 @@ const styles = StyleSheet.create({
   subtitle: {
     color: "#525252",
     fontSize: 14,
-    fontFamily: "Lexend",
+    fontFamily: "Lexend300",
     fontStyle: "normal",
-    fontWeight: "300",
     lineHeight: 20,
   },
 });

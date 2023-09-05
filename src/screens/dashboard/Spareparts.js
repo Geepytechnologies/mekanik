@@ -6,8 +6,9 @@ import { TextInput } from "react-native";
 import { Fontisto } from "@expo/vector-icons";
 import Usercard from "./components/Usercard";
 import { useNavigation } from "@react-navigation/native";
+import Dealercard from "./components/Dealercard";
 
-const AvailableMechanics = () => {
+const Spareparts = () => {
   const [text, setText] = useState("");
   const navigation = useNavigation();
   return (
@@ -19,7 +20,7 @@ const AvailableMechanics = () => {
           size={24}
           color="black"
         />
-        <Text style={styles.navtext}>Available Mechanics</Text>
+        <Text style={styles.navtext}>Spare Parts</Text>
       </View>
       <View style={styles.searchcon}>
         <Fontisto name="search" size={20} color="#AFAEAE" />
@@ -41,28 +42,15 @@ const AvailableMechanics = () => {
           fontWeight: "500",
         }}
       >
-        Favourites (2):
+        Showing dealers:
       </Text>
-      <Usercard />
-      <Usercard />
-      <Text
-        style={{
-          marginVertical: 16,
-          fontFamily: "Lexend",
-          fontSize: 12,
-          color: "#868585",
-          fontWeight: "500",
-        }}
-      >
-        Recommended (2):
-      </Text>
-      <Usercard />
-      <Usercard />
+      <Dealercard />
+      <Dealercard />
     </SafeAreaView>
   );
 };
 
-export default AvailableMechanics;
+export default Spareparts;
 
 const styles = StyleSheet.create({
   nav: {

@@ -3,14 +3,14 @@ import React, { useState } from "react";
 import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
-import { hidersm } from "../../../utils/redux/slices/rsmslice";
+import { hidepaysuccessmodal } from "../../../utils/redux/slices/paymentsuccessmodal";
 
-const Reachoutsuccessmodal = ({ isVisible, closeModal }) => {
+const Paymentsuccessmodal = ({ isVisible, closeModal }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const handlepress = () => {
-    dispatch(hidersm());
-    navigation.navigate("main");
+    dispatch(hidepaysuccessmodal());
+    // initiate a new chatbox message saying that the payment was successful
   };
   return (
     <Modal
@@ -40,8 +40,7 @@ const Reachoutsuccessmodal = ({ isVisible, closeModal }) => {
               textAlign: "center",
             }}
           >
-            You have successfully sent an emergency message. Someone will reach
-            out to you now!
+            You have successfully made payment to this mechanic!
           </Text>
           <Pressable onPress={handlepress} style={styles.blackbtn}>
             <Text style={styles.btntext}>CONTINUE</Text>
@@ -52,7 +51,7 @@ const Reachoutsuccessmodal = ({ isVisible, closeModal }) => {
   );
 };
 
-export default Reachoutsuccessmodal;
+export default Paymentsuccessmodal;
 
 const styles = StyleSheet.create({
   popup: {

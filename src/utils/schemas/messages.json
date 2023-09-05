@@ -1,0 +1,7 @@
+{
+  "id": "id",
+  "sender": "id",
+  "receiver": "id",
+  "timesent": "will likely be the creadAt time",
+  "message": "String"
+}

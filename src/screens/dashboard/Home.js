@@ -15,24 +15,29 @@ import Reachoutsuccessmodal from "./components/Reachoutsuccessmodal";
 import { useDispatch, useSelector } from "react-redux";
 import { hidersm } from "../../utils/redux/slices/rsmslice";
 import { hiderm } from "../../utils/redux/slices/rmslice";
-import { showrsm } from "../../utils/redux/slices/rsmslice";
-import { showrm } from "../../utils/redux/slices/rmslice";
+import Emergencymodal from "./components/Emergencymodal";
+import {
+  hideemergencymodal,
+  showemergencymodal,
+} from "../../utils/redux/slices/emergencymodal";
+import Paymentsuccessmodal from "./components/Paymentsuccessmodal";
+import { hidepaysuccessmodal } from "../../utils/redux/slices/paymentsuccessmodal";
 
 const Home = ({ navigation }) => {
   const showthersm = useSelector((state) => state.rsm.show);
   const showtherm = useSelector((state) => state.rm.show);
+  const { showemergency } = useSelector((state) => state.emergencymodal);
+  const { showpaysuccess } = useSelector((state) => state.paysuccess);
+
   const dispatch = useDispatch();
 
-  const availablemechanicscreen = () => {
-    navigation.navigate("availablemechanics"); // Navigate to the "Next" screen
-  };
   const [isModalVisible, setModalVisible] = useState(false);
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
   const toggleModalreachout = () => {
-    dispatch(showrm());
+    dispatch(showemergencymodal());
   };
   return (
     <SafeAreaView>
@@ -56,7 +61,10 @@ const Home = ({ navigation }) => {
                 <Text style={styles.icontext}>Hire a mechanic</Text>
               </View>
             </Pressable>
-            <Pressable style={[styles.box, { borderTopRightRadius: 8 }]}>
+            <Pressable
+              onPress={() => navigation.navigate("spareparts")}
+              style={[styles.box, { borderTopRightRadius: 8 }]}
+            >
               <View style={styles.innerbox}>
                 <View style={[styles.iconbox, { backgroundColor: "#EEFBEE" }]}>
                   <Handyman />
@@ -120,18 +128,20 @@ const Home = ({ navigation }) => {
               Got an emergency? We are here for you. Click the button below
               right away!
             </Text>
-            <View>
-              <Pressable onPress={toggleModalreachout} style={styles.btn}>
-                <Text style={styles.btntext}>reach out now</Text>
-              </Pressable>
-            </View>
+            <Pressable onPress={toggleModalreachout} style={styles.btn}>
+              <Text style={styles.btntext}>reach out now</Text>
+            </Pressable>
           </View>
         </View>
         {/* more services */}
         <View style={{ marginTop: 32, marginBottom: 50 }}>
           <View>
             <Text
-              style={{ color: "#868585", fontSize: 12, fontFamily: "Lexend" }}
+              style={{
+                color: "#868585",
+                fontSize: 12,
+                fontFamily: "Lexend400",
+              }}
             >
               More services:
             </Text>
@@ -174,6 +184,14 @@ const Home = ({ navigation }) => {
           isVisible={showthersm}
           closeModal={() => dispatch(hidersm())}
         />
+        <Paymentsuccessmodal
+          isVisible={showpaysuccess}
+          closeModal={() => dispatch(hidepaysuccessmodal())}
+        />
+        <Emergencymodal
+          isVisible={showemergency}
+          closeModal={() => dispatch(hideemergencymodal())}
+        />
       </ScrollView>
     </SafeAreaView>
   );
@@ -195,11 +213,9 @@ const styles = StyleSheet.create({
   },
   desc: {
     fontSize: 14,
-    fontWeight: "500",
     lineHeight: 20,
-    fontWeight: "300",
     color: "#525252",
-    fontFamily: "Lexend",
+    fontFamily: "Lexend300",
   },
   gridboxcontainer: {
     display: "flex",
@@ -259,9 +275,8 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   icontext: {
-    fontFamily: "Lexend",
+    fontFamily: "Lexend400",
     fontSize: 12,
-    fontWeight: "400",
   },
   reachcon: {
     display: "flex",
@@ -297,7 +312,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   reachtext: {
-    fontFamily: "Lexend",
+    fontFamily: "Lexend300",
     color: "white",
     fontSize: 14,
     marginBottom: 24,
@@ -310,9 +325,8 @@ const styles = StyleSheet.create({
   },
   btntext: {
     textTransform: "uppercase",
-    fontWeight: "700",
     fontSize: 10,
-    fontFamily: "Lexend",
+    fontFamily: "Lexend700",
     textAlign: "center",
     color: "#0D0D0D",
   },

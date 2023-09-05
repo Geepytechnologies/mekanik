@@ -42,6 +42,7 @@ const SignInScreen = () => {
               style={styles.passwordboxinput}
               placeholder="Password"
               keyboardType="default"
+              secureTextEntry={!isPasswordVisible}
             />
             <Pressable onPress={togglePasswordVisibility}>
               <Ionicons
@@ -147,9 +148,8 @@ const styles = StyleSheet.create({
     borderColor: "#D9D9D9",
   },
   googletext: {
-    fontFamily: "Lexend",
+    fontFamily: "Lexend700",
     fontSize: 12,
-    fontWeight: "700",
   },
   options: {
     display: "flex",
@@ -171,16 +171,14 @@ const styles = StyleSheet.create({
   already: {
     color: "#0D0D0D",
     fontSize: 14,
-    fontFamily: "Lexend",
+    fontFamily: "Lexend300",
     fontStyle: "normal",
-    fontWeight: "300",
     lineHeight: 20,
   },
   forgot: {
     color: "#0059FF",
     fontSize: 12,
-    fontFamily: "Lexend",
-    fontWeight: "600",
+    fontFamily: "Lexend600",
     textTransform: "uppercase",
     lineHeight: 20,
   },
@@ -195,17 +193,15 @@ const styles = StyleSheet.create({
   subtitle: {
     color: "#525252",
     fontSize: 14,
-    fontFamily: "Lexend",
+    fontFamily: "Lexend300",
     fontStyle: "normal",
-    fontWeight: "300",
     lineHeight: 20,
   },
   signin: {
     color: "#0059FF",
     fontSize: 12,
-    fontFamily: "Lexend",
+    fontFamily: "Lexend600",
     fontStyle: "normal",
-    fontWeight: "600",
     lineHeight: 20,
   },
 });

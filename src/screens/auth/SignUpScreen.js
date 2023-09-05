@@ -24,18 +24,33 @@ const SignUpScreen = () => {
       <View style={styles.innercon}>
         <View style={styles.options}>
           <View style={styles.option1}>
-            <Text style={{ fontWeight: "500", fontSize: 14, color: "#0D0D0D" }}>
+            <Text
+              style={{
+                fontSize: 14,
+                color: "#0D0D0D",
+                fontFamily: "Lexend500",
+              }}
+            >
               Car Owner
             </Text>
           </View>
           <View style={styles.option2}>
-            <Text>Vendor</Text>
+            <Text
+              style={{
+                fontSize: 14,
+                color: "#AFAEAE",
+                fontFamily: "Lexend500",
+              }}
+            >
+              Vendor
+            </Text>
           </View>
         </View>
         {/* form */}
         <View>
           <View style={styles.textbox}>
             <TextInput
+              style={{ fontFamily: "Lexend300", fontSize: 14 }}
               placeholder="Full Name"
               keyboardType="default"
               placeholderTextColor="#AFAEAE"
@@ -43,6 +58,7 @@ const SignUpScreen = () => {
           </View>
           <View style={styles.textbox}>
             <TextInput
+              styles={{ fontFamily: "Lexend300", fontSize: 14 }}
               placeholder="Phone Number"
               keyboardType="default"
               placeholderTextColor="#AFAEAE"
@@ -53,6 +69,7 @@ const SignUpScreen = () => {
               style={styles.passwordboxinput}
               placeholder="Password"
               keyboardType="default"
+              secureTextEntry={!isPasswordVisible}
             />
             <Pressable onPress={togglePasswordVisibility}>
               <Ionicons
@@ -91,6 +108,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     flexDirection: "column",
     flex: 1,
+    marginTop: 24,
   },
   innercon: {
     padding: 16,
@@ -107,9 +125,8 @@ const styles = StyleSheet.create({
     color: "#FFF",
     textAlign: "center",
     fontSize: 12,
-    fontFamily: "Lexend",
+    fontFamily: "Lexend700",
     fontStyle: "normal",
-    fontWeight: 700,
     lineHeight: 20,
     textTransform: "uppercase",
   },
@@ -136,7 +153,6 @@ const styles = StyleSheet.create({
     paddingVertical: 18,
     paddingHorizontal: 16,
     marginBottom: 16,
-    fontFamily: "Lexend",
   },
   orCon: {
     display: "flex",
@@ -156,9 +172,8 @@ const styles = StyleSheet.create({
     borderColor: "#D9D9D9",
   },
   googletext: {
-    fontFamily: "Lexend",
+    fontFamily: "Lexend700",
     fontSize: 12,
-    fontWeight: 700,
   },
   options: {
     display: "flex",
@@ -193,17 +208,15 @@ const styles = StyleSheet.create({
   already: {
     color: "#0D0D0D",
     fontSize: 14,
-    fontFamily: "Lexend",
+    fontFamily: "Lexend300",
     fontStyle: "normal",
-    fontWeight: "300",
     lineHeight: 20,
   },
   signin: {
     color: "#0059FF",
     fontSize: 12,
-    fontFamily: "Lexend",
+    fontFamily: "Lexend600",
     fontStyle: "normal",
-    fontWeight: "600",
     lineHeight: 20,
   },
 });

@@ -10,6 +10,10 @@ const Hiremodal = ({ isVisible, closeModal }) => {
   const [selectedValue2, setSelectedValue2] = useState("");
   const [text, setText] = useState("");
   const navigation = useNavigation();
+  const handlepress = () => {
+    closeModal();
+    navigation.navigate("availablemechanics");
+  };
   return (
     <Modal
       style={{ margin: 0 }}
@@ -23,20 +27,18 @@ const Hiremodal = ({ isVisible, closeModal }) => {
           Fill in the details below to proceed.
         </Text>
         <View style={{ gap: 16, marginTop: 16 }}>
-          <View>
-            <Picker
-              style={styles.picker}
-              selectedValue={selectedValue}
-              onValueChange={(itemValue, itemIndex) =>
-                setSelectedValue(itemValue)
-              }
-            >
-              <Picker.Item label="Select your car" value="" />
-              <Picker.Item label="Option 1" value="option1" />
-              <Picker.Item label="Option 2" value="option2" />
-              <Picker.Item label="Option 3" value="option3" />
-            </Picker>
-          </View>
+          <Picker
+            style={styles.picker}
+            selectedValue={selectedValue}
+            onValueChange={(itemValue, itemIndex) =>
+              setSelectedValue(itemValue)
+            }
+          >
+            <Picker.Item label="Select your car" value="" />
+            <Picker.Item label="Option 1" value="option1" />
+            <Picker.Item label="Option 2" value="option2" />
+            <Picker.Item label="Option 3" value="option3" />
+          </Picker>
           <TextInput
             style={styles.textInput}
             multiline={true}
@@ -59,10 +61,7 @@ const Hiremodal = ({ isVisible, closeModal }) => {
               <Picker.Item label="Option 3" value="option3" />
             </Picker>
           </View>
-          <Pressable
-            onPress={() => navigation.navigate("availablemechanics")}
-            style={styles.btn}
-          >
+          <Pressable onPress={handlepress} style={styles.btn}>
             <Text style={styles.btntext}>see available mechanics</Text>
           </Pressable>
         </View>
@@ -89,9 +88,8 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   hiredesc: {
-    fontFamily: "Lexend",
+    fontFamily: "Lexend300",
     fontSize: 14,
-    fontWeight: "300",
     color: "#525252",
     marginBottom: 8,
   },
@@ -102,14 +100,12 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
     color: "#AFAEAE",
     fontSize: 14,
-    fontFamily: "Lexend",
-    fontWeight: "300",
+    fontFamily: "Lexend300",
   },
   textInput: {
     color: "#AFAEAE",
     fontSize: 14,
-    fontFamily: "Lexend",
-    fontWeight: "300",
+    fontFamily: "Lexend300",
     padding: 16,
     backgroundColor: "#F8F8F8",
   },
@@ -120,9 +116,8 @@ const styles = StyleSheet.create({
   },
   btntext: {
     textTransform: "uppercase",
-    fontFamily: "Lexend",
+    fontFamily: "Lexend700",
     fontSize: 12,
-    fontWeight: "700",
     color: "white",
     textAlign: "center",
   },

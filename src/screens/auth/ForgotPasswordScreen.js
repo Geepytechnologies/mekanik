@@ -77,9 +77,8 @@ const styles = StyleSheet.create({
     color: "#FFF",
     textAlign: "center",
     fontSize: 12,
-    fontFamily: "Lexend",
+    fontFamily: "Lexend700",
     fontStyle: "normal",
-    fontWeight: 700,
     lineHeight: 20,
     textTransform: "uppercase",
   },
@@ -111,9 +110,8 @@ const styles = StyleSheet.create({
   already: {
     color: "#0D0D0D",
     fontSize: 14,
-    fontFamily: "Lexend",
+    fontFamily: "Lexend300",
     fontStyle: "normal",
-    fontWeight: "300",
     lineHeight: 20,
   },
   welcome: {
@@ -125,16 +123,14 @@ const styles = StyleSheet.create({
   subtitle: {
     color: "#525252",
     fontSize: 14,
-    fontFamily: "Lexend",
-    fontWeight: "300",
+    fontFamily: "Lexend300",
     lineHeight: 20,
   },
   signin: {
     color: "#0059FF",
     fontSize: 12,
-    fontFamily: "Lexend",
+    fontFamily: "Lexend600",
     fontStyle: "normal",
-    fontWeight: "600",
     lineHeight: 20,
   },
 });

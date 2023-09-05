@@ -12,12 +12,43 @@ const Tab = createBottomTabNavigator();
 
 const MainTabNavigator = () => {
   const navigation = useNavigation();
+  const CustomTabBarItem = ({
+    size,
+    color,
+    iconName,
+    label,
+    focused,
+    icon,
+  }) => {
+    return (
+      <View
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+          marginTop: 5,
+        }}
+      >
+        {icon == "entypo" ? (
+          <Entypo name={iconName} size={size} color={color} />
+        ) : icon == "material" ? (
+          <MaterialCommunityIcons name={iconName} size={size} color={color} />
+        ) : (
+          <Ionicons name={iconName} size={size} color={color} />
+        )}
+        <Text style={{ color: focused ? "#0D0D0D" : "#AFAEAE" }}>{label}</Text>
+      </View>
+    );
+  };
   return (
     <Tab.Navigator
       initialRouteName="Home"
       screenOptions={{
-        tabBarStyle: { backgroundColor: "whitesmoke" },
+        tabBarStyle: {
+          backgroundColor: "whitesmoke",
+          height: 70,
+        },
         headerStyle: { backgroundColor: "whitesmoke" },
+        tabBarLabel: () => null,
       }}
     >
       <Tab.Screen
@@ -25,26 +56,47 @@ const MainTabNavigator = () => {
         component={Home}
         options={{
           headerShown: false,
-          tabBarIcon: ({ size, color }) => (
-            <Ionicons name="home" size={size} color={color} />
+          tabBarIcon: ({ size, color, focused }) => (
+            <CustomTabBarItem
+              iconName={"home"}
+              size={28}
+              color={focused ? "#0D0D0D" : "#D9D9D9"}
+              label="Home"
+              focused={focused}
+              icon={"material"}
+            />
           ),
         }}
       />
       <Tab.Screen
-        name="garage"
+        name="My garage"
         component={GarageHomeScreen}
         options={{
-          tabBarIcon: ({ size, color }) => (
-            <MaterialCommunityIcons name="garage" size={size} color={color} />
+          tabBarIcon: ({ size, color, focused }) => (
+            <CustomTabBarItem
+              iconName={"car-outline"}
+              size={28}
+              color={focused ? "#0D0D0D" : "#D9D9D9"}
+              label="My Garage"
+              focused={focused}
+              icon={"material"}
+            />
           ),
         }}
       />
       <Tab.Screen
-        name="shop"
+        name="Auto shop"
         component={ShopHomeScreen}
         options={{
-          tabBarIcon: ({ size, color }) => (
-            <Entypo name="shop" size={size} color={color} />
+          tabBarIcon: ({ size, color, focused }) => (
+            <CustomTabBarItem
+              iconName={"shop"}
+              size={28}
+              color={focused ? "#0D0D0D" : "#D9D9D9"}
+              label="Auto shop"
+              focused={focused}
+              icon={"entypo"}
+            />
           ),
         }}
       />
@@ -53,8 +105,15 @@ const MainTabNavigator = () => {
         name="Settings"
         component={SettingsHomeScreen}
         options={{
-          tabBarIcon: ({ size, color }) => (
-            <Ionicons name="settings-outline" size={size} color={color} />
+          tabBarIcon: ({ size, color, focused }) => (
+            <CustomTabBarItem
+              iconName={"settings-outline"}
+              size={28}
+              color={focused ? "#0D0D0D" : "#D9D9D9"}
+              label="Settings"
+              focused={focused}
+              icon={"ionicons"}
+            />
           ),
         }}
       />

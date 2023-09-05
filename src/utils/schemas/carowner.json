@@ -1,0 +1,6 @@
+{
+  "fullname": "String",
+  "phone": "Number",
+  "password": "String",
+  "messages": "[{ }] --> messageID reference to messages table"
+}

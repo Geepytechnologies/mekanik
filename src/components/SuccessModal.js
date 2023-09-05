@@ -5,6 +5,10 @@ import { useNavigation } from "@react-navigation/native";
 
 const SuccessModal = ({ isVisible, closeModal }) => {
   const navigation = useNavigation();
+  const handlepress = () => {
+    closeModal();
+    navigation.navigate("main");
+  };
   return (
     <Modal
       style={{ margin: 0, display: "flex", alignItems: "center" }}
@@ -35,10 +39,7 @@ const SuccessModal = ({ isVisible, closeModal }) => {
           >
             You have successfully reset and created a new password!
           </Text>
-          <Pressable
-            onPress={() => navigation.navigate("main")}
-            style={styles.blackbtn}
-          >
+          <Pressable onPress={handlepress} style={styles.blackbtn}>
             <Text style={styles.btntext}>SIGN IN</Text>
           </Pressable>
         </View>
@@ -82,9 +83,8 @@ const styles = StyleSheet.create({
     color: "#FFF",
     textAlign: "center",
     fontSize: 12,
-    fontFamily: "Lexend",
+    fontFamily: "Lexend700",
     fontStyle: "normal",
-    fontWeight: "700",
     lineHeight: 20,
     textTransform: "uppercase",
   },

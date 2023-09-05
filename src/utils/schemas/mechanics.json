@@ -1,0 +1,9 @@
+{
+  "status": "String",
+  "carsfixed": "Number",
+  "location": "String",
+  "rating": "Number",
+  "verified": "Boolean",
+  "profilepicture": "String",
+  "specialty": "String"
+}
