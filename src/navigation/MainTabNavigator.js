@@ -3,10 +3,10 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons, Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import SettingsHomeScreen from "../screens/settings/SettingsHomeScreen";
-import ShopHomeScreen from "../screens/shop/ShopHomeScreen";
-import GarageHomeScreen from "../screens/garage/GarageHomeScreen";
-import Home from "../screens/dashboard/Home";
+import SettingsHomeScreen from "../screens/settings/screens/SettingsHomeScreen";
+import GarageHomeScreen from "../screens/garage/screens/GarageHomeScreen";
+import Home from "../screens/dashboard/screens/Home";
+import ShopHomeScreen from "../screens/shop/screens/ShopHomeScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -72,6 +72,7 @@ const MainTabNavigator = () => {
         name="My garage"
         component={GarageHomeScreen}
         options={{
+          headerShown: false,
           tabBarIcon: ({ size, color, focused }) => (
             <CustomTabBarItem
               iconName={"car-outline"}
@@ -88,6 +89,7 @@ const MainTabNavigator = () => {
         name="Auto shop"
         component={ShopHomeScreen}
         options={{
+          headerShown: false,
           tabBarIcon: ({ size, color, focused }) => (
             <CustomTabBarItem
               iconName={"shop"}
@@ -105,6 +107,7 @@ const MainTabNavigator = () => {
         name="Settings"
         component={SettingsHomeScreen}
         options={{
+          headerShown: false,
           tabBarIcon: ({ size, color, focused }) => (
             <CustomTabBarItem
               iconName={"settings-outline"}

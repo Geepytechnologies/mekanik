@@ -10,11 +10,14 @@ import ForgotPasswordSreen from "../screens/auth/ForgotPasswordScreen";
 import NewPasswordScreen from "../screens/auth/NewPasswordScreen";
 import ResetPasswordScreen from "../screens/auth/ResetPasswordScreen.js";
 import SuccessModal from "../components/SuccessModal";
-import AvailableMechanics from "../screens/dashboard/AvailableMechanics";
-import ContactMechanic from "../screens/dashboard/ContactMechanic";
-import Chatmechanic from "../screens/dashboard/Chatmechanic";
-import Spareparts from "../screens/dashboard/Spareparts";
-import Spareparts2 from "../screens/dashboard/Spareparts2";
+import AvailableMechanics from "../screens/dashboard/screens/AvailableMechanics";
+import ContactMechanic from "../screens/dashboard/screens/ContactMechanic";
+import Chatmechanic from "../screens/dashboard/screens/Chatmechanic";
+import Spareparts from "../screens/dashboard/screens/Spareparts";
+import Spareparts2 from "../screens/dashboard/screens/Spareparts2";
+import Vehicleinfo from "../screens/garage/screens/Vehicleinfo";
+import Editprofile from "../screens/settings/screens/Editprofile";
+import Updatepassword from "../screens/settings/screens/Updatepassword";
 
 const Stack = createNativeStackNavigator();
 
@@ -81,6 +84,21 @@ const Navigator = () => {
           name="spareparts2"
           options={{ headerShown: false }}
           component={Spareparts2}
+        />
+        <Stack.Screen
+          name="vehicleinfo"
+          options={{ headerShown: false }}
+          component={Vehicleinfo}
+        />
+        <Stack.Screen
+          name="editprofile"
+          options={{ headerShown: false }}
+          component={Editprofile}
+        />
+        <Stack.Screen
+          name="updatepassword"
+          options={{ headerShown: false }}
+          component={Updatepassword}
         />
         <Stack.Screen
           name="newPassword"
