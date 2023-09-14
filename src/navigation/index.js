@@ -3,7 +3,7 @@ import { View, Text } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import MainTabNavigator from "./MainTabNavigator";
-import SplashScreen from "../screens/auth/SplashScreen";
+import SplashScreen from "../components/SplashScreen";
 import SignInScreen from "../screens/auth/SignInScreen";
 import SignUpScreen from "../screens/auth/SignUpScreen";
 import ForgotPasswordSreen from "../screens/auth/ForgotPasswordScreen";
@@ -32,7 +32,7 @@ const Navigator = () => {
   return (
     <NavigationContainer theme={theme}>
       <Stack.Navigator
-        initialRouteName="splash"
+        initialRouteName="signIn"
         // screenOptions={{ headerStyle: { backgroundColor: 'red' } }}
       >
         <Stack.Screen
@@ -40,11 +40,11 @@ const Navigator = () => {
           component={MainTabNavigator}
           options={{ headerShown: false }}
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           name="splash"
           options={{ headerShown: false }}
           component={SplashScreen}
-        />
+        /> */}
         <Stack.Screen
           name="signIn"
           component={SignInScreen}
