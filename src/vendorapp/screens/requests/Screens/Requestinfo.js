@@ -7,29 +7,33 @@ import { Image } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FlatList } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import { showcompletejob } from "../../../utils/redux/slices/completejobmodal";
+import Acceptjob from "../components/modals/Acceptjob";
 import {
-  hidesetpaymentmodal,
-  showsetpaymentmodal,
-} from "../../../utils/redux/slices/setpaymentmodal";
-import Setpayment from "../components/modals/Setpayment";
-import { hidesetpaymentsuccess } from "../../../utils/redux/slices/successmodal";
-import Successmodal from "../components/modals/Success";
-import CompletedSuccess from "../components/modals/CompletedSuccess";
-import { hidecompletedjob } from "../../../utils/redux/slices/completedjobmodal";
+  hideacceptjob,
+  showacceptjob,
+} from "../../../utils/redux/slices/acceptjob";
+import Acceptjobsuccess from "../components/modals/Acceptjobsuccess";
+import { hideacceptjobsuccess } from "../../../utils/redux/slices/acceptjobsuccess";
+import Declinejob from "../components/modals/Declinejob";
 import {
-  hidecompletejob,
-  showcompletejob,
-} from "../../../utils/redux/slices/completejobmodal";
-import Completejob from "../components/modals/Completejob";
+  hidedeclinejob,
+  showdeclinejob,
+} from "../../../utils/redux/slices/declinejob";
+import Declinejobsuccess from "../components/modals/Declinejobsuccess";
+import { hidedeclinejobsuccess } from "../../../utils/redux/slices/declinejobsuccess";
 
-const Jobinfo = () => {
-  const navigation = useNavigation();
+const Requestinfo = ({ navigation }) => {
   const [text, setText] = useState("");
   const dispatch = useDispatch();
-  const { setpaymentmodal } = useSelector((state) => state.setpaymentmodal);
-  const { showsuccessmodal } = useSelector((state) => state.successmodal);
-  const { completedjobmodal } = useSelector((state) => state.completedjobmodal);
-  const { completejobmodal } = useSelector((state) => state.completejobmodal);
+  const { acceptjobsuccessmodal } = useSelector(
+    (state) => state.acceptjobsuccessmodal
+  );
+  const { declinejobmodal } = useSelector((state) => state.declinejobmodal);
+  const { declinejobsuccessmodal } = useSelector(
+    (state) => state.declinejobsuccessmodal
+  );
+  const { acceptjobmodal } = useSelector((state) => state.acceptjobmodal);
 
   return (
     <SafeAreaView style={{ padding: 16 }}>
@@ -183,64 +187,49 @@ const Jobinfo = () => {
           </View>
           <View style={styles.hr}></View>
           <View style={styles.btncon}>
-            <Pressable
-              onPress={() => navigation.navigate("chatmechanic")}
-              style={styles.transbtn}
-            >
+            <Pressable onPress={""} style={styles.transbtn}>
               <Text style={styles.transbtntext}>CONTACT</Text>
             </Pressable>
-            <Pressable
-              onPress={() => dispatch(showcompletejob())}
-              style={styles.blackbtn}
-            >
-              <Text style={styles.btntext}>COMPLETE JOB</Text>
-            </Pressable>
           </View>
         </View>
-        {/* payment */}
-        <View
-          style={{
-            padding: 16,
-            borderColor: "#E6E5E5",
-            borderWidth: 1,
-            gap: 16,
-          }}
-        >
-          <View>
-            <Text style={styles.payment}>Payment:</Text>
-            <Text style={styles.price}>{`₦ 0.00`}</Text>
-          </View>
-          <View>
-            <Pressable
-              onPress={() => dispatch(showsetpaymentmodal())}
-              style={[styles.transbtn, { maxWidth: 144 }]}
-            >
-              <Text style={styles.transbtntext}>set payment</Text>
-            </Pressable>
-          </View>
+        {/* action buttons */}
+        <View style={styles.btncon}>
+          <Pressable
+            onPress={() => dispatch(showdeclinejob())}
+            style={styles.redbtn}
+          >
+            <Text style={styles.redbtntext}>DECLINE</Text>
+          </Pressable>
+          <Pressable
+            onPress={() => dispatch(showacceptjob())}
+            style={styles.blackbtn}
+          >
+            <Text style={styles.btntext}>ACCEPT JOB</Text>
+          </Pressable>
         </View>
       </ScrollView>
-      <Setpayment
-        isVisible={setpaymentmodal}
-        closeModal={() => dispatch(hidesetpaymentmodal())}
+
+      <Acceptjob
+        isVisible={acceptjobmodal}
+        closeModal={() => dispatch(hideacceptjob())}
       />
-      <Successmodal
-        isVisible={showsuccessmodal}
-        closeModal={() => dispatch(hidesetpaymentsuccess())}
+      <Acceptjobsuccess
+        isVisible={acceptjobsuccessmodal}
+        closeModal={() => dispatch(hideacceptjobsuccess())}
       />
-      <Completejob
-        isVisible={completejobmodal}
-        closeModal={() => dispatch(hidecompletejob())}
+      <Declinejob
+        isVisible={declinejobmodal}
+        closeModal={() => dispatch(hidedeclinejob())}
       />
-      <CompletedSuccess
-        isVisible={completedjobmodal}
-        closeModal={() => dispatch(hidecompletedjob())}
+      <Declinejobsuccess
+        isVisible={declinejobsuccessmodal}
+        closeModal={() => dispatch(hidedeclinejobsuccess())}
       />
     </SafeAreaView>
   );
 };
 
-export default Jobinfo;
+export default Requestinfo;
 
 const styles = StyleSheet.create({
   nav: {
@@ -321,6 +310,16 @@ const styles = StyleSheet.create({
     borderColor: "#D9D9D9",
     flex: 1,
   },
+  redbtn: {
+    display: "flex",
+    paddingVertical: 18,
+    paddingHorizontal: 24,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#DA1212",
+    flex: 1,
+  },
   blackbtn: {
     display: "flex",
     paddingVertical: 18,
@@ -341,6 +340,15 @@ const styles = StyleSheet.create({
   },
   transbtntext: {
     color: "black",
+    textAlign: "center",
+    fontSize: 12,
+    fontFamily: "Lexend700",
+    fontStyle: "normal",
+    lineHeight: 20,
+    textTransform: "uppercase",
+  },
+  redbtntext: {
+    color: "#DA1212",
     textAlign: "center",
     fontSize: 12,
     fontFamily: "Lexend700",

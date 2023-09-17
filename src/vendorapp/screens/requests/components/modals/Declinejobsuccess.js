@@ -3,13 +3,13 @@ import React, { useState } from "react";
 import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
-import { hidesetpaymentsuccess } from "../../../../utils/redux/slices/successmodal";
+import { hidedeclinejobsuccess } from "../../../../utils/redux/slices/declinejobsuccess";
 
-const Successmodal = ({ isVisible, closeModal }) => {
+const Declinejobsuccess = ({ isVisible, closeModal }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const handlepress = () => {
-    dispatch(hidesetpaymentsuccess());
+    dispatch(hidedeclinejobsuccess());
   };
   return (
     <Modal
@@ -41,7 +41,7 @@ const Successmodal = ({ isVisible, closeModal }) => {
               textAlign: "center",
             }}
           >
-            You have successfully set your payment for this job!
+            You have successfully declined this job request!
           </Text>
           <Pressable onPress={handlepress} style={styles.blackbtn}>
             <Text style={styles.btntext}>CONTINUE</Text>
@@ -52,7 +52,7 @@ const Successmodal = ({ isVisible, closeModal }) => {
   );
 };
 
-export default Successmodal;
+export default Declinejobsuccess;
 
 const styles = StyleSheet.create({
   popup: {

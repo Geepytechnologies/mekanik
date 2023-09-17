@@ -9,6 +9,7 @@ import SplashScreen from "./src/components/SplashScreen";
 import VendorNavigator from "./src/vendorapp/navigations";
 import { NavigationContainer } from "@react-navigation/native";
 import vendorstore from "./src/vendorapp/utils/redux/store";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 export default function App() {
   const [isFontLoaded, setIsFontLoaded] = useState(false);
@@ -31,6 +32,8 @@ export default function App() {
       </View>
     );
   }
+  const Stack = createNativeStackNavigator();
+
   return (
     <>
       {mekanik ? (
@@ -51,7 +54,16 @@ export default function App() {
         )
       ) : (
         <NavigationContainer>
-          <SplashScreen setMekanik={setMekanik} />
+          <Stack.Navigator initialRouteName="splash">
+            <Stack.Screen
+              name="splash"
+              options={{
+                headerShown: false,
+              }}
+            >
+              {(props) => <SplashScreen {...props} setMekanik={setMekanik} />}
+            </Stack.Screen>
+          </Stack.Navigator>
         </NavigationContainer>
       )}
     </>

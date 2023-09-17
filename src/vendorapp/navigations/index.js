@@ -9,6 +9,10 @@ import SignInScreen from "../screens/auth/SignInScreen";
 import ResetPasswordScreen from "../screens/auth/ResetPasswordScreen";
 import NewPasswordScreen from "../screens/auth/NewPasswordScreen";
 import Jobinfo from "../screens/home/screens/Jobinfo";
+import Requestinfo from "../screens/requests/Screens/Requestinfo";
+import Editprofile from "../../screens/settings/screens/Editprofile";
+import Updatepassword from "../../screens/settings/screens/Updatepassword";
+import Chatmechanic from "../screens/home/screens/Chatmechanic";
 
 const Stack = createNativeStackNavigator();
 
@@ -60,6 +64,26 @@ const VendorNavigator = () => {
           name="jobinfo"
           component={Jobinfo}
           options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="requestinfo"
+          component={Requestinfo}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="chatmechanic"
+          component={Chatmechanic}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="editprofile"
+          options={{ headerShown: false }}
+          component={Editprofile}
+        />
+        <Stack.Screen
+          name="updatepassword"
+          options={{ headerShown: false }}
+          component={Updatepassword}
         />
       </Stack.Navigator>
     </NavigationContainer>

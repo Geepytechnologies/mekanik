@@ -3,13 +3,14 @@ import React, { useState } from "react";
 import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
-import { hidesetpaymentsuccess } from "../../../../utils/redux/slices/successmodal";
+import { hidecompletedjob } from "../../../../utils/redux/slices/completedjobmodal";
 
-const Successmodal = ({ isVisible, closeModal }) => {
+const CompletedSuccess = ({ isVisible, closeModal }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const handlepress = () => {
-    dispatch(hidesetpaymentsuccess());
+    dispatch(hidecompletedjob());
+    navigation.navigate("Home", { activepageroute: 2 });
   };
   return (
     <Modal
@@ -41,7 +42,8 @@ const Successmodal = ({ isVisible, closeModal }) => {
               textAlign: "center",
             }}
           >
-            You have successfully set your payment for this job!
+            You have successfully completed this job. Once confirmed, the
+            balance of your payment will be paid to your wallet.
           </Text>
           <Pressable onPress={handlepress} style={styles.blackbtn}>
             <Text style={styles.btntext}>CONTINUE</Text>
@@ -52,7 +54,7 @@ const Successmodal = ({ isVisible, closeModal }) => {
   );
 };
 
-export default Successmodal;
+export default CompletedSuccess;
 
 const styles = StyleSheet.create({
   popup: {

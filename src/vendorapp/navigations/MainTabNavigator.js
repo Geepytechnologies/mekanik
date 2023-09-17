@@ -3,8 +3,12 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons, Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import SignUpScreen from "../screens/auth/SignUpScreen";
 import Home from "../screens/home/screens/Home";
+import Requests from "../screens/requests/Screens/Requests";
+import Wallet from "../screens/wallet/screens/Wallet";
+import { Platform } from "react-native";
+import SettingsHomeScreen from "../screens/settings/screens/SettingsHomeScreen";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
 
@@ -30,6 +34,8 @@ const MainTabNavigator = () => {
           <Entypo name={iconName} size={size} color={color} />
         ) : icon == "material" ? (
           <MaterialCommunityIcons name={iconName} size={size} color={color} />
+        ) : icon == "materialicon" ? (
+          <MaterialIcons name={iconName} size={size} color={color} />
         ) : (
           <Ionicons name={iconName} size={size} color={color} />
         )}
@@ -43,7 +49,7 @@ const MainTabNavigator = () => {
       screenOptions={{
         tabBarStyle: {
           backgroundColor: "whitesmoke",
-          height: 70,
+          height: Platform.OS == "ios" ? 90 : 70,
         },
         headerStyle: { backgroundColor: "whitesmoke" },
         tabBarLabel: () => null,
@@ -68,34 +74,34 @@ const MainTabNavigator = () => {
       />
       <Tab.Screen
         name="Requests"
-        component={SignUpScreen}
+        component={Requests}
         options={{
           headerShown: false,
           tabBarIcon: ({ size, color, focused }) => (
             <CustomTabBarItem
-              iconName={"car-outline"}
+              iconName={"list-alt"}
               size={28}
               color={focused ? "#0D0D0D" : "#D9D9D9"}
               label="Requests"
               focused={focused}
-              icon={"material"}
+              icon={"materialicon"}
             />
           ),
         }}
       />
       <Tab.Screen
         name="Wallet"
-        component={SignUpScreen}
+        component={Wallet}
         options={{
           headerShown: false,
           tabBarIcon: ({ size, color, focused }) => (
             <CustomTabBarItem
-              iconName={"shop"}
+              iconName={"wallet"}
               size={28}
               color={focused ? "#0D0D0D" : "#D9D9D9"}
               label="Wallet"
               focused={focused}
-              icon={"entypo"}
+              icon={"material"}
             />
           ),
         }}
@@ -103,7 +109,7 @@ const MainTabNavigator = () => {
 
       <Tab.Screen
         name="Settings"
-        component={SignUpScreen}
+        component={SettingsHomeScreen}
         options={{
           headerShown: false,
           tabBarIcon: ({ size, color, focused }) => (

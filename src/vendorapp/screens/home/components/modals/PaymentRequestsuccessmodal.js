@@ -3,13 +3,13 @@ import React, { useState } from "react";
 import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
-import { hidesetpaymentsuccess } from "../../../../utils/redux/slices/successmodal";
+import { hidepaymentrequestsuccessmodal } from "../../../../utils/redux/slices/paymentrequestsuccess";
 
-const Successmodal = ({ isVisible, closeModal }) => {
+const PaymentRequestsuccessmodal = ({ isVisible, closeModal }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const handlepress = () => {
-    dispatch(hidesetpaymentsuccess());
+    dispatch(hidepaymentrequestsuccessmodal());
   };
   return (
     <Modal
@@ -52,7 +52,7 @@ const Successmodal = ({ isVisible, closeModal }) => {
   );
 };
 
-export default Successmodal;
+export default PaymentRequestsuccessmodal;
 
 const styles = StyleSheet.create({
   popup: {

@@ -21,7 +21,7 @@ const SplashScreen = ({ setMekanik }) => {
   //   return () => clearTimeout(timer);
   // }, [navigation]);
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flex: 1 }}>
       <ScrollView style={styles.container}>
         <View style={styles.logocon}>
           <Text style={styles.logo}>mekanik</Text>
@@ -58,7 +58,7 @@ const SplashScreen = ({ setMekanik }) => {
         {/* image */}
         <View style={styles.imgcon}>
           <Image
-            source={require("../../assets/images/Pre-comp.png")}
+            source={require("../../assets/images/splashgif.gif")}
             style={styles.image}
           />
         </View>
@@ -148,5 +148,8 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     marginBottom: 40,
   },
-  image: {},
+  image: {
+    width: 400,
+    height: 264,
+  },
 });

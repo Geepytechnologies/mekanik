@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView } from "react-native";
 import { Pressable } from "react-native";
@@ -8,13 +8,26 @@ import { Image } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import Vehiclecard from "../components/cards/Vehiclecard";
 
-const Home = () => {
+const Home = ({ route }) => {
+  let activepagenow;
+  if (route.params) {
+    const { activepageroute } = route.params;
+    activepagenow = activepageroute;
+  }
+  const [activepage, setActivepage] = useState(activepagenow ?? 1);
   const navigation = useNavigation();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (activepagenow) {
+      setActivepage(activepagenow);
+    }
+  }, [route]);
 
   const handleNavigation = (screenName) => {
     navigation.navigate(screenName);
   };
+
   return (
     <SafeAreaView
       style={{
@@ -23,17 +36,11 @@ const Home = () => {
         position: "relative",
       }}
     >
-      <Pressable
-        style={styles.add}
-        onPress={() => dispatch(showvehiclemodal())}
-      >
-        <Image source={require("../../../../../assets/images/add.png")} />
-      </Pressable>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.options}>
           <Pressable
-            onPress={() => handleNavigation("vehicles")}
-            style={styles.option1}
+            onPress={() => setActivepage(1)}
+            style={activepage == 1 ? styles.option1 : styles.option2}
           >
             <Text
               style={{
@@ -46,8 +53,8 @@ const Home = () => {
             </Text>
           </Pressable>
           <Pressable
-            onPress={() => handleNavigation("purchases")}
-            style={styles.option2}
+            onPress={() => setActivepage(2)}
+            style={activepage == 2 ? styles.option1 : styles.option2}
           >
             <Text
               style={{
@@ -60,20 +67,20 @@ const Home = () => {
             </Text>
           </Pressable>
         </View>
-        <View style={{ gap: 16 }}>
-          <Vehiclecard />
-          <Vehiclecard />
-          <Vehiclecard />
-        </View>
+        {activepage == 1 && (
+          <View style={{ gap: 16 }}>
+            <Vehiclecard />
+            <Vehiclecard />
+            <Vehiclecard />
+          </View>
+        )}
+        {activepage == 2 && (
+          <View style={{ gap: 16 }}>
+            <Vehiclecard />
+            <Vehiclecard />
+          </View>
+        )}
       </ScrollView>
-      {/* <Addvehiclemodal
-        isVisible={showvehicle}
-        closeModal={() => dispatch(hidevehiclemodal())}
-      />
-      <Successmodal
-        isVisible={showgaragesuccessmodal}
-        closeModal={() => dispatch(hidegaragesuccess())}
-      /> */}
     </SafeAreaView>
   );
 };

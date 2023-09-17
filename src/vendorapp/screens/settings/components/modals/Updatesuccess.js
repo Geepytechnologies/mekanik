@@ -3,13 +3,12 @@ import React, { useState } from "react";
 import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
-import { hidesetpaymentsuccess } from "../../../../utils/redux/slices/successmodal";
 
-const Successmodal = ({ isVisible, closeModal }) => {
+const Updatesuccess = ({ isVisible, closeModal }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const handlepress = () => {
-    dispatch(hidesetpaymentsuccess());
+    dispatch(hidepaysuccessmodal());
   };
   return (
     <Modal
@@ -20,7 +19,7 @@ const Successmodal = ({ isVisible, closeModal }) => {
       <View style={styles.popup}>
         <View style={styles.content}>
           <Image
-            source={require("../../../../../../assets/images/checkmark.png")}
+            source={require("../../../../../assets/images/checkmark.png")}
           />
           <Text
             style={{
@@ -41,7 +40,7 @@ const Successmodal = ({ isVisible, closeModal }) => {
               textAlign: "center",
             }}
           >
-            You have successfully set your payment for this job!
+            You have successfully updated your password!
           </Text>
           <Pressable onPress={handlepress} style={styles.blackbtn}>
             <Text style={styles.btntext}>CONTINUE</Text>
@@ -52,7 +51,7 @@ const Successmodal = ({ isVisible, closeModal }) => {
   );
 };
 
-export default Successmodal;
+export default Updatesuccess;
 
 const styles = StyleSheet.create({
   popup: {
