@@ -5,18 +5,17 @@ import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import { heightPercentage } from "../../../../../utils/dimensions";
 import { hideacceptjob } from "../../../../utils/redux/slices/acceptjob";
-import { hidedeclinejob } from "../../../../utils/redux/slices/declinejob";
-import { showdeclinejobsuccess } from "../../../../utils/redux/slices/declinejobsuccess";
+import { showacceptjobsuccess } from "../../../../utils/redux/slices/acceptjobsuccess";
 
-const Declinejob = ({ isVisible, closeModal }) => {
+const Acceptjob = ({ isVisible, closeModal }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
   const handlepress = () => {
-    dispatch(hidedeclinejob());
+    dispatch(hideacceptjob());
 
     setTimeout(() => {
-      dispatch(showdeclinejobsuccess());
+      dispatch(showacceptjobsuccess());
     }, 400);
   };
   return (
@@ -34,7 +33,7 @@ const Declinejob = ({ isVisible, closeModal }) => {
               color: "#0D0D0D",
             }}
           >
-            Decline Job?
+            Accept Job?
           </Text>
           <Text
             style={{
@@ -44,18 +43,18 @@ const Declinejob = ({ isVisible, closeModal }) => {
               marginTop: 4,
             }}
           >
-            You are about to decline this new job. Kindly confirm your decision
+            You are about to accept this new job. Kindly confirm your decision
             below.
           </Text>
           <View style={styles.btncon}>
             <Pressable
-              onPress={() => dispatch(hidedeclinejob())}
+              onPress={() => dispatch(hideacceptjob())}
               style={styles.transbtn}
             >
               <Text style={styles.transbtntext}>Go BACK</Text>
             </Pressable>
             <Pressable onPress={handlepress} style={styles.blackbtn}>
-              <Text style={styles.btntext}>DECLINE</Text>
+              <Text style={styles.btntext}>ACCEPT</Text>
             </Pressable>
           </View>
         </View>
@@ -64,7 +63,7 @@ const Declinejob = ({ isVisible, closeModal }) => {
   );
 };
 
-export default Declinejob;
+export default Acceptjob;
 
 const styles = StyleSheet.create({
   modalcon: {
@@ -104,7 +103,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#DA1212",
+    backgroundColor: "#0D0D0D",
     flex: 1,
   },
   btntext: {

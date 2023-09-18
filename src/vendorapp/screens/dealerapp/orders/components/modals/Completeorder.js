@@ -3,20 +3,19 @@ import React, { useState } from "react";
 import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
-import { heightPercentage } from "../../../../../utils/dimensions";
-import { hideacceptjob } from "../../../../utils/redux/slices/acceptjob";
-import { hidedeclinejob } from "../../../../utils/redux/slices/declinejob";
-import { showdeclinejobsuccess } from "../../../../utils/redux/slices/declinejobsuccess";
+import { hidecompletejob } from "../../../../../utils/redux/slices/completejobmodal";
+import { heightPercentage } from "../../../../../../utils/dimensions";
+import { showcompletedjob } from "../../../../../utils/redux/slices/completedjobmodal";
 
-const Declinejob = ({ isVisible, closeModal }) => {
+const Completeorder = ({ isVisible, closeModal }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
   const handlepress = () => {
-    dispatch(hidedeclinejob());
+    dispatch(hidecompletejob());
 
     setTimeout(() => {
-      dispatch(showdeclinejobsuccess());
+      dispatch(showcompletedjob());
     }, 400);
   };
   return (
@@ -34,7 +33,7 @@ const Declinejob = ({ isVisible, closeModal }) => {
               color: "#0D0D0D",
             }}
           >
-            Decline Job?
+            Complete Order?
           </Text>
           <Text
             style={{
@@ -44,18 +43,19 @@ const Declinejob = ({ isVisible, closeModal }) => {
               marginTop: 4,
             }}
           >
-            You are about to decline this new job. Kindly confirm your decision
-            below.
+            You are about to complete this order, indicating the product has
+            been delivered. Once confirmed, your payment will be credited into
+            your wallet.
           </Text>
           <View style={styles.btncon}>
             <Pressable
-              onPress={() => dispatch(hidedeclinejob())}
+              onPress={() => dispatch(hidecompletejob())}
               style={styles.transbtn}
             >
               <Text style={styles.transbtntext}>Go BACK</Text>
             </Pressable>
             <Pressable onPress={handlepress} style={styles.blackbtn}>
-              <Text style={styles.btntext}>DECLINE</Text>
+              <Text style={styles.btntext}>COMPLETE</Text>
             </Pressable>
           </View>
         </View>
@@ -64,7 +64,7 @@ const Declinejob = ({ isVisible, closeModal }) => {
   );
 };
 
-export default Declinejob;
+export default Completeorder;
 
 const styles = StyleSheet.create({
   modalcon: {
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#DA1212",
+    backgroundColor: "#0D0D0D",
     flex: 1,
   },
   btntext: {

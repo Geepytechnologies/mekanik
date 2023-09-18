@@ -3,12 +3,11 @@ import React, { useState } from "react";
 import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
-import { heightPercentage } from "../../../../../utils/dimensions";
-import { hideacceptjob } from "../../../../utils/redux/slices/acceptjob";
-import { hidedeclinejob } from "../../../../utils/redux/slices/declinejob";
-import { showdeclinejobsuccess } from "../../../../utils/redux/slices/declinejobsuccess";
+import { hidedeclinejob } from "../../../../../utils/redux/slices/declinejob";
+import { showdeclinejobsuccess } from "../../../../../utils/redux/slices/declinejobsuccess";
+import { heightPercentage } from "../../../../../../utils/dimensions";
 
-const Declinejob = ({ isVisible, closeModal }) => {
+const Deleteproduct = ({ isVisible, closeModal }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
@@ -34,7 +33,7 @@ const Declinejob = ({ isVisible, closeModal }) => {
               color: "#0D0D0D",
             }}
           >
-            Decline Job?
+            Delete Product?
           </Text>
           <Text
             style={{
@@ -44,8 +43,8 @@ const Declinejob = ({ isVisible, closeModal }) => {
               marginTop: 4,
             }}
           >
-            You are about to decline this new job. Kindly confirm your decision
-            below.
+            Are you sure you want to delete this product? This action is
+            irreversible.
           </Text>
           <View style={styles.btncon}>
             <Pressable
@@ -55,7 +54,7 @@ const Declinejob = ({ isVisible, closeModal }) => {
               <Text style={styles.transbtntext}>Go BACK</Text>
             </Pressable>
             <Pressable onPress={handlepress} style={styles.blackbtn}>
-              <Text style={styles.btntext}>DECLINE</Text>
+              <Text style={styles.btntext}>DELETE</Text>
             </Pressable>
           </View>
         </View>
@@ -64,7 +63,7 @@ const Declinejob = ({ isVisible, closeModal }) => {
   );
 };
 
-export default Declinejob;
+export default Deleteproduct;
 
 const styles = StyleSheet.create({
   modalcon: {

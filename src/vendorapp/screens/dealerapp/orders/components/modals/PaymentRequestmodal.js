@@ -3,20 +3,19 @@ import React, { useState } from "react";
 import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
-import { heightPercentage } from "../../../../../utils/dimensions";
-import { hideacceptjob } from "../../../../utils/redux/slices/acceptjob";
-import { hidedeclinejob } from "../../../../utils/redux/slices/declinejob";
-import { showdeclinejobsuccess } from "../../../../utils/redux/slices/declinejobsuccess";
+import { heightPercentage } from "../../../../../../utils/dimensions";
+import { hidepaymentrequestmodal } from "../../../../../utils/redux/slices/paymentrequest";
+import { showpaymentrequestsuccessmodal } from "../../../../../utils/redux/slices/paymentrequestsuccess";
 
-const Declinejob = ({ isVisible, closeModal }) => {
+const PaymentRequestmodal = ({ isVisible, closeModal }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
   const handlepress = () => {
-    dispatch(hidedeclinejob());
+    dispatch(hidepaymentrequestmodal());
 
     setTimeout(() => {
-      dispatch(showdeclinejobsuccess());
+      dispatch(showpaymentrequestsuccessmodal());
     }, 400);
   };
   return (
@@ -34,7 +33,7 @@ const Declinejob = ({ isVisible, closeModal }) => {
               color: "#0D0D0D",
             }}
           >
-            Decline Job?
+            Send Request?
           </Text>
           <Text
             style={{
@@ -44,18 +43,50 @@ const Declinejob = ({ isVisible, closeModal }) => {
               marginTop: 4,
             }}
           >
-            You are about to decline this new job. Kindly confirm your decision
-            below.
+            You are about to send a payment request to this car owner. Please
+            confirm below.
           </Text>
+          <View style={styles.amount}>
+            <View style={{ flex: 1 }}>
+              <Text
+                style={{
+                  fontFamily: "Lexend600",
+                  fontSize: 24,
+                  color: "#0D0D0D",
+                }}
+              >
+                ₦45,000
+              </Text>
+              <Text
+                style={{
+                  fontFamily: "Lexend300",
+                  fontSize: 12,
+                  color: "#525252",
+                  marginTop: 4,
+                }}
+              >
+                Withdrawal amount
+              </Text>
+            </View>
+            <Text
+              style={{
+                fontFamily: "Lexend700",
+                fontSize: 10,
+                color: "#0059FF",
+              }}
+            >
+              EDIT AMOUNT
+            </Text>
+          </View>
           <View style={styles.btncon}>
             <Pressable
-              onPress={() => dispatch(hidedeclinejob())}
+              onPress={() => dispatch(hidepaymentrequestmodal())}
               style={styles.transbtn}
             >
               <Text style={styles.transbtntext}>Go BACK</Text>
             </Pressable>
             <Pressable onPress={handlepress} style={styles.blackbtn}>
-              <Text style={styles.btntext}>DECLINE</Text>
+              <Text style={styles.btntext}>SEND</Text>
             </Pressable>
           </View>
         </View>
@@ -64,7 +95,7 @@ const Declinejob = ({ isVisible, closeModal }) => {
   );
 };
 
-export default Declinejob;
+export default PaymentRequestmodal;
 
 const styles = StyleSheet.create({
   modalcon: {
@@ -104,7 +135,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#DA1212",
+    backgroundColor: "#0D0D0D",
     flex: 1,
   },
   btntext: {
@@ -124,5 +155,15 @@ const styles = StyleSheet.create({
     fontStyle: "normal",
     lineHeight: 20,
     textTransform: "uppercase",
+  },
+  amount: {
+    borderRadius: 8,
+    marginTop: 24,
+    backgroundColor: "#F8F8F8",
+    borderWidth: 1,
+    borderColor: "#EFEFEF",
+    padding: 16,
+    display: "flex",
+    flexDirection: "row",
   },
 });

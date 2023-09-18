@@ -10,6 +10,7 @@ import VendorNavigator from "./src/vendorapp/navigations";
 import { NavigationContainer } from "@react-navigation/native";
 import vendorstore from "./src/vendorapp/utils/redux/store";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import DealerNavigator from "./src/vendorapp/navigations/DealerNavigator";
 
 export default function App() {
   const [isFontLoaded, setIsFontLoaded] = useState(false);
@@ -47,7 +48,8 @@ export default function App() {
         ) : (
           <Provider store={vendorstore}>
             <View style={styles.container}>
-              <VendorNavigator />
+              {/* <VendorNavigator /> */}
+              <DealerNavigator />
               <StatusBar style="auto" />
             </View>
           </Provider>

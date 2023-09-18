@@ -16,6 +16,9 @@ import editsuccessmodal from "../slices/editsuccessmodal";
 import updatesuccessmodal from "../slices/updatesuccessmodal";
 import paymentrequest from "../slices/paymentrequest";
 import paymentrequestsuccess from "../slices/paymentrequestsuccess";
+import productdetailsmodal from "../slices/productdetailsmodal";
+import editproduct from "../slices/editproduct";
+import editproductsuccess from "../slices/editproductsuccess";
 
 const rootReducer = combineReducers({
   setpaymentmodal: setpaymentmodal,
@@ -35,6 +38,9 @@ const rootReducer = combineReducers({
   updatesuccessmodal: updatesuccessmodal,
   paymentrequestmodal: paymentrequest,
   paymentrequestsuccessmodal: paymentrequestsuccess,
+  productdetail: productdetailsmodal,
+  editproduct: editproduct,
+  editproductsuccess: editproductsuccess,
 });
 
 export default rootReducer;
