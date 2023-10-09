@@ -29,7 +29,7 @@ const DealerNavigator = () => {
   return (
     <NavigationContainer theme={theme}>
       <Stack.Navigator
-        initialRouteName="signUp"
+        initialRouteName="main"
         // screenOptions={{ headerStyle: { backgroundColor: 'red' } }}
       >
         <Stack.Screen

@@ -28,6 +28,9 @@ const Home = ({ navigation }) => {
   const showtherm = useSelector((state) => state.rm.show);
   const { showemergency } = useSelector((state) => state.emergencymodal);
   const { showpaysuccess } = useSelector((state) => state.paymentsuccessmodal);
+  const { currentuser } = useSelector((state) => state.userslice);
+
+  const username = currentuser?.fullname.split(" ")[0];
 
   const dispatch = useDispatch();
 
@@ -42,7 +45,7 @@ const Home = ({ navigation }) => {
   return (
     <SafeAreaView>
       <ScrollView style={styles.container}>
-        <Text style={styles.name}>Hello John!</Text>
+        <Text style={styles.name}>Hello {username}!</Text>
         <Text style={styles.desc}>What does your car need today?</Text>
         {/* grid */}
         <View style={styles.gridboxcontainer}>

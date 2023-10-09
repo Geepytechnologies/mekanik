@@ -23,6 +23,9 @@ const Reachoutmodal = ({ isVisible, closeModal }) => {
       isVisible={isVisible}
       onModalHide={() => dispatch(showrsm())}
       onBackdropPress={closeModal}
+      swipeDirection={["down"]}
+      onSwipeComplete={closeModal}
+      propagateSwipe={true}
     >
       <View style={styles.modalcon}>
         {/* Modal content goes here */}

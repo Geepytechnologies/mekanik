@@ -9,11 +9,18 @@ import { Ionicons } from "@expo/vector-icons";
 import { Pressable } from "react-native";
 import Support from "../svgs/Support";
 import Signout from "../svgs/Signout";
+import { useDispatch, useSelector } from "react-redux";
+import { SIGNOUT } from "../../../utils/redux/slices/userslice";
+import { deleteFromstore } from "../../../utils/storage";
 
 const SettingsHomeScreen = ({ navigation }) => {
-  const [biometric, setBiometric] = useState(true);
-  const [emailnotifications, setEmailnotifications] = useState(true);
-  const [pushnotifications, setPushnotifications] = useState(true);
+  const { currentuser } = useSelector((state) => state.userslice);
+  const { emailnotify, pushnotify, usebiometric } = currentuser;
+  const dispatch = useDispatch();
+  const [biometric, setBiometric] = useState(usebiometric);
+  const [emailnotifications, setEmailnotifications] = useState(emailnotify);
+  const [pushnotifications, setPushnotifications] = useState(pushnotify);
+  console.log(currentuser);
   const togglebiometric = () => {
     setBiometric(!biometric);
   };
@@ -22,6 +29,16 @@ const SettingsHomeScreen = ({ navigation }) => {
   };
   const togglepushnotifications = () => {
     setPushnotifications(!pushnotifications);
+  };
+  let imageUrl;
+  if (currentuser.profileimg !== undefined) {
+    imageUrl = { uri: currentuser.profileimg };
+  } else {
+    imageUrl = require("../../../../assets/images/mancartoon.png");
+  }
+  const signout = async () => {
+    dispatch(SIGNOUT());
+    await deleteFromstore("accessToken");
   };
   return (
     <SafeAreaView
@@ -44,14 +61,14 @@ const SettingsHomeScreen = ({ navigation }) => {
         <View style={styles.contentcontainer}>
           <View style={styles.profile}>
             <View>
-              <Text style={styles.name}>John Olayinka</Text>
-              <Text style={styles.email}>peter@gmail.com</Text>
+              <Text style={styles.name}>{currentuser.fullname}</Text>
+              <Text style={styles.email}>{currentuser.email}</Text>
             </View>
             <View style={styles.imgcontain}>
               <View style={styles.imgcon}>
                 <Image
                   style={{ width: "100%", height: "100%" }}
-                  source={require("../../../../assets/images/mancartoon.png")}
+                  source={imageUrl}
                   resizeMode="cover"
                 />
               </View>
@@ -153,10 +170,10 @@ const SettingsHomeScreen = ({ navigation }) => {
               <Support />
               <Text style={styles.profiletext}>Contact support</Text>
             </View>
-            <View style={styles.profilesingle}>
+            <Pressable onPress={signout} style={styles.profilesingle}>
               <Signout />
               <Text style={styles.profiletextred}>Sign out</Text>
-            </View>
+            </Pressable>
           </View>
         </View>
       </ScrollView>

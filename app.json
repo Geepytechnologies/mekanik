@@ -4,7 +4,8 @@
     "slug": "mekanikApp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "scheme": "mekanikApp",
+    "icon": "./assets/images/newlogo.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -21,14 +22,19 @@
     ],
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "config": {
+        "usesNonExemptEncryption": false
+      },
+      "bundleIdentifier": "com.geepytech.mekanikApp"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.geepytech.mekanikApp"
+      "package": "com.geepytech.mekanikApp",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"

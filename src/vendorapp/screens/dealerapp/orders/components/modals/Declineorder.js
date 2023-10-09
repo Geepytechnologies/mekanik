@@ -23,6 +23,9 @@ const Declineorder = ({ isVisible, closeModal }) => {
       style={{ margin: 0, display: "flex", alignItems: "center" }}
       isVisible={isVisible}
       onBackdropPress={closeModal}
+      swipeDirection={["down"]}
+      onSwipeComplete={closeModal}
+      propagateSwipe={true}
     >
       <View style={styles.modalcon}>
         <View style={styles.content}>

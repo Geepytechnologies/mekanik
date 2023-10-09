@@ -10,8 +10,10 @@ import vehiclemodal from "../slices/addvehiclemodal";
 import garagesuccessmodal from "../slices/garagesuccessmodal";
 import editsuccessmodal from "../slices/editsuccessmodal";
 import updatesuccessmodal from "../slices/updatesuccessmodal";
+import userslice from "../slices/userslice";
 
 const rootReducer = combineReducers({
+  userslice: userslice,
   rsm: rsmReducer,
   rm: rmReducer,
   addcardmodal: addcardReducer,

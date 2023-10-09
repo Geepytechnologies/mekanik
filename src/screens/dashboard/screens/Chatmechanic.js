@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Button, ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FontAwesome } from "@expo/vector-icons";
@@ -16,9 +16,15 @@ import Paymentmodal from "../components/modals/Paymentmodal";
 import { hidepaymentmodal } from "../../../utils/redux/slices/Paymentmodalslice";
 import Paymentsuccessmodal from "../components/modals/Paymentsuccessmodal";
 import { hidepaysuccessmodal } from "../../../utils/redux/slices/paymentsuccessmodal";
+import { io } from "socket.io-client";
+import { usePushNotifications } from "../../../hooks/usePushNotifications";
+import { Pressable } from "react-native";
 
 const Chatmechanic = ({ route }) => {
+  const { sendPushNotification, notification } = usePushNotifications();
   const [text, setText] = useState("");
+  const [socket, setSocket] = useState(null);
+  const [messages, setMessages] = useState([]);
   const navigation = useNavigation();
   const currentScreenName = route.name;
 
@@ -26,6 +32,36 @@ const Chatmechanic = ({ route }) => {
   const { show } = useSelector((state) => state.paymentmodal);
   const { showpaysuccess } = useSelector((state) => state.paymentsuccessmodal);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    // Connect to the Socket.IO server
+    const socket = io("http://192.168.0.3:5000"); // Change the URL to your server's URL
+    setSocket(socket);
+
+    socket.on("connect", () => {
+      console.log("Connected to the server");
+    });
+
+    // Listen for the 'disconnect' event to check if the socket disconnected
+    socket.on("disconnect", () => {
+      console.log("Disconnected from the server");
+    });
+
+    // Listen for incoming messages
+    socket.on("chat message", (msg) => {
+      sendPushNotification("Mekanik", msg, {
+        time: "",
+      });
+      setMessages((prevMessages) => [...prevMessages, msg]);
+    });
+
+    // Clean up the socket connection when the component unmounts
+    return () => {
+      if (socket) {
+        socket.disconnect();
+      }
+    };
+  }, []);
 
   return (
     <SafeAreaView style={{ padding: 16, flex: 1 }}>

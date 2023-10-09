@@ -41,6 +41,9 @@ const Addvehiclemodal = ({ isVisible, closeModal }) => {
       isVisible={isVisible}
       onBackdropPress={closeModal}
       onBackButtonPress={closeModal}
+      swipeDirection={["down"]}
+      onSwipeComplete={closeModal}
+      propagateSwipe={true}
     >
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}

@@ -68,6 +68,9 @@ const Addnewproduct = ({ isVisible, closeModal }) => {
       style={{ margin: 0 }}
       isVisible={isVisible}
       onBackdropPress={closeModal}
+      swipeDirection={["down"]}
+      onSwipeComplete={closeModal}
+      propagateSwipe={true}
     >
       <View style={styles.modalcon}>
         {/* Modal content goes here */}

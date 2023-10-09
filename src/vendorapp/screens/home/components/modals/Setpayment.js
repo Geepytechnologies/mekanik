@@ -35,6 +35,9 @@ const Setpayment = ({ isVisible, closeModal }) => {
       isVisible={isVisible}
       //   onModalHide={() => dispatch(showrsm())}
       onBackdropPress={closeModal}
+      swipeDirection={["down"]}
+      onSwipeComplete={closeModal}
+      propagateSwipe={true}
     >
       <KeyboardAvoidingView
         style={{ backgroundColor: "black", marginTop: "auto" }}

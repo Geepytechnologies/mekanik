@@ -11,8 +11,15 @@ import { NavigationContainer } from "@react-navigation/native";
 import vendorstore from "./src/vendorapp/utils/redux/store";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import DealerNavigator from "./src/vendorapp/navigations/DealerNavigator";
+import { usePushNotifications } from "./src/hooks/usePushNotifications";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ActivityIndicator } from "react-native";
+import Vendortonavigate from "./src/vendorapp/navigations/Vendortonavigate";
+
+const queryClient = new QueryClient();
 
 export default function App() {
+  const { sendPushNotification } = usePushNotifications();
   const [isFontLoaded, setIsFontLoaded] = useState(false);
   const [mekanik, setMekanik] = useState(null);
 
@@ -26,48 +33,49 @@ export default function App() {
   }, []);
 
   if (!isFontLoaded) {
-    // You can render a loading indicator here
     return (
       <View>
-        <Text>Loading fonts...</Text>
+        <ActivityIndicator />
       </View>
     );
   }
   const Stack = createNativeStackNavigator();
-
   return (
     <>
-      {mekanik ? (
-        mekanik === "user" ? (
-          <Provider store={store}>
-            <View style={styles.container}>
-              <Navigator />
-              <StatusBar style="auto" />
-            </View>
-          </Provider>
+      <QueryClientProvider client={queryClient}>
+        {mekanik ? (
+          mekanik === "user" ? (
+            <Provider store={store}>
+              <View style={styles.container}>
+                <Navigator />
+                <StatusBar style="auto" />
+              </View>
+            </Provider>
+          ) : (
+            <Provider store={vendorstore}>
+              <View style={styles.container}>
+                {/* <VendorNavigator /> */}
+                {/* <DealerNavigator /> */}
+                <Vendortonavigate />
+                <StatusBar style="auto" />
+              </View>
+            </Provider>
+          )
         ) : (
-          <Provider store={vendorstore}>
-            <View style={styles.container}>
-              {/* <VendorNavigator /> */}
-              <DealerNavigator />
-              <StatusBar style="auto" />
-            </View>
-          </Provider>
-        )
-      ) : (
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName="splash">
-            <Stack.Screen
-              name="splash"
-              options={{
-                headerShown: false,
-              }}
-            >
-              {(props) => <SplashScreen {...props} setMekanik={setMekanik} />}
-            </Stack.Screen>
-          </Stack.Navigator>
-        </NavigationContainer>
-      )}
+          <NavigationContainer>
+            <Stack.Navigator initialRouteName="splash">
+              <Stack.Screen
+                name="splash"
+                options={{
+                  headerShown: false,
+                }}
+              >
+                {(props) => <SplashScreen {...props} setMekanik={setMekanik} />}
+              </Stack.Screen>
+            </Stack.Navigator>
+          </NavigationContainer>
+        )}
+      </QueryClientProvider>
     </>
   );
 }

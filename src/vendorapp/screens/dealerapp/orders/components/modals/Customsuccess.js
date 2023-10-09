@@ -12,6 +12,9 @@ const Customsuccess = ({ isVisible, closeModal, message }) => {
       style={{ margin: 0, display: "flex", alignItems: "center" }}
       isVisible={isVisible}
       onBackdropPress={closeModal}
+      swipeDirection={["down"]}
+      onSwipeComplete={closeModal}
+      propagateSwipe={true}
     >
       <View style={styles.popup}>
         <View style={styles.content}>

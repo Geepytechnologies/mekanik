@@ -6,18 +6,118 @@ import {
   Image,
   Pressable,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import Google from "../../components/svgs/Google";
+import Googlelogo from "../../components/svgs/Google";
 import Ordivider from "../../components/Ordivider";
+import { signinwithgoogle, signup } from "../../utils/usermethods";
+import * as WebBrowser from "expo-web-browser";
+import * as Google from "expo-auth-session/providers/google";
+import { savetostore } from "../../utils/storage";
+import { useDispatch } from "react-redux";
+import { SIGNIN } from "../../utils/redux/slices/userslice";
+
+WebBrowser.maybeCompleteAuthSession();
 
 const SignUpScreen = () => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
+  const [userdetails, setUserdetails] = useState({
+    fullname: "",
+    email: "",
+    phone: "",
+    password: "",
+  });
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
+  };
+  const [request, response, promptAsync] = Google.useAuthRequest(
+    {
+      androidClientId: process.env.EXPO_PUBLIC_ANDROIDCLIENTID,
+      expoClientId: process.env.EXPO_PUBLIC_EXPOCLIENTID,
+      scopes: ["profile", "email", "openid"],
+    }
+    // { authorizationEndpoint: "https://accounts.google.com/o/oauth2/v2/auth" }
+  );
+  useEffect(() => {
+    WebBrowser.warmUpAsync();
+    return () => {
+      WebBrowser.coolDownAsync();
+    };
+  }, []);
+
+  useEffect(() => {
+    signInWithGoogle();
+  }, [response]);
+
+  const signInWithGoogle = async () => {
+    if (response?.type === "success") {
+      const token =
+        response.authentication?.accessToken ||
+        response.params?.access_token ||
+        response.params?.id_token;
+      await getUserInfo(token);
+    }
+  };
+
+  const getUserInfo = async (accessToken) => {
+    if (!accessToken) return;
+    let response = await fetch("https://www.googleapis.com/userinfo/v2/me", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    const userinfo = await response.json();
+    await handleGoogleSignUp(userinfo);
+    setUser(userinfo);
+  };
+
+  const handleFullnameChange = (text) => {
+    setUserdetails({ ...userdetails, fullname: text });
+  };
+  const handleEmailChange = (text) => {
+    setUserdetails({ ...userdetails, email: text });
+  };
+  const handlePhoneChange = (text) => {
+    setUserdetails({ ...userdetails, phone: text });
+  };
+
+  const handlePasswordChange = (text) => {
+    setUserdetails({ ...userdetails, password: text });
+  };
+
+  const handleSignUp = async () => {
+    setLoading(true);
+    try {
+      const response = await signup(
+        userdetails.fullname,
+        userdetails.email,
+        userdetails.phone,
+        userdetails.password
+      );
+      if (response) {
+        navigation.replace("signIn");
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSignUp = async (data) => {
+    try {
+      const response = await signinwithgoogle(data);
+      dispatch(SIGNIN(response.others));
+      savetostore("accessToken", response?.accessToken);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -50,6 +150,7 @@ const SignUpScreen = () => {
         <View>
           <View style={styles.textbox}>
             <TextInput
+              onChangeText={(text) => handleFullnameChange(text)}
               style={{ fontFamily: "Lexend300", fontSize: 14 }}
               placeholder="Full Name"
               keyboardType="default"
@@ -58,14 +159,25 @@ const SignUpScreen = () => {
           </View>
           <View style={styles.textbox}>
             <TextInput
+              onChangeText={(text) => handlePhoneChange(text)}
               styles={{ fontFamily: "Lexend300", fontSize: 14 }}
               placeholder="Phone Number"
               keyboardType="default"
               placeholderTextColor="#AFAEAE"
             />
           </View>
+          <View style={styles.textbox}>
+            <TextInput
+              onChangeText={(text) => handleEmailChange(text)}
+              styles={{ fontFamily: "Lexend300", fontSize: 14 }}
+              placeholder="Email"
+              keyboardType="default"
+              placeholderTextColor="#AFAEAE"
+            />
+          </View>
           <View style={styles.passwordbox}>
             <TextInput
+              onChangeText={(text) => handlePasswordChange(text)}
               style={styles.passwordboxinput}
               placeholder="Password"
               keyboardType="default"
@@ -78,24 +190,27 @@ const SignUpScreen = () => {
               />
             </Pressable>
           </View>
-          <Pressable
-            onPress={() => navigation.navigate("signIn")}
-            style={styles.blackbtn}
-          >
-            <Text style={styles.btntext}>CREATE ACCOUNT</Text>
+          <Pressable onPress={handleSignUp} style={styles.blackbtn}>
+            {loading ? (
+              <ActivityIndicator size={"large"} color={"white"} />
+            ) : (
+              <Text style={styles.btntext}>CREATE ACCOUNT</Text>
+            )}
           </Pressable>
         </View>
         <View style={styles.orCon}>
           <Ordivider />
         </View>
-        <View style={styles.googlecon}>
-          <Google />
+        <Pressable onPress={() => promptAsync()} style={styles.googlecon}>
+          <Googlelogo />
           <Text style={styles.googletext}>SIGN UP WITH GOOGLE</Text>
-        </View>
+        </Pressable>
       </View>
       <View style={styles.account}>
         <Text style={styles.already}>Already have an account?</Text>
-        <Text style={styles.signin}>SIGN IN</Text>
+        <Pressable onPress={() => navigation.replace("signIn")}>
+          <Text style={styles.signin}>SIGN IN</Text>
+        </Pressable>
       </View>
     </SafeAreaView>
   );

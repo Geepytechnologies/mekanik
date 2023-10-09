@@ -6,18 +6,106 @@ import {
   Image,
   Pressable,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import Google from "../../components/svgs/Google";
+import Googlelogo from "../../components/svgs/Google";
 import Ordivider from "../../components/Ordivider";
+import * as WebBrowser from "expo-web-browser";
+import * as Google from "expo-auth-session/providers/google";
+import { makeRedirectUri } from "expo-auth-session";
+import { signin, signinwithgoogle } from "../../utils/usermethods";
+import { ActivityIndicator } from "react-native";
+import { savetostore } from "../../utils/storage";
+import { useDispatch } from "react-redux";
+import { SIGNIN } from "../../utils/redux/slices/userslice";
+
+WebBrowser.maybeCompleteAuthSession();
 
 const SignInScreen = () => {
+  const [user, setUser] = useState();
   const navigation = useNavigation();
+  const [userdetails, setUserdetails] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
+  };
+  const [request, response, promptAsync] = Google.useAuthRequest(
+    {
+      androidClientId:
+        "907851189600-m3jflgmmid8r17uofllp1n2idr33mpud.apps.googleusercontent.com",
+      expoClientId:
+        "907851189600-fehuhselu25c58vq4fpngkua7g98ad1s.apps.googleusercontent.com",
+      scopes: ["profile", "email", "openid"],
+    }
+    // { authorizationEndpoint: "https://accounts.google.com/o/oauth2/v2/auth" }
+  );
+  useEffect(() => {
+    WebBrowser.warmUpAsync();
+    return () => {
+      WebBrowser.coolDownAsync();
+    };
+  }, []);
+
+  useEffect(() => {
+    signInWithGoogle();
+  }, [response]);
+
+  const signInWithGoogle = async () => {
+    if (response?.type === "success") {
+      const token =
+        response.authentication?.accessToken ||
+        response.params?.access_token ||
+        response.params?.id_token;
+      await getUserInfo(token);
+    }
+  };
+
+  const getUserInfo = async (accessToken) => {
+    if (!accessToken) return;
+    let response = await fetch("https://www.googleapis.com/userinfo/v2/me", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    const userinfo = await response.json();
+    await handleGoogleSignIn(userinfo);
+    setUser(userinfo);
+  };
+  const handleEmailChange = (text) => {
+    setUserdetails({ ...userdetails, email: text });
+  };
+
+  const handlePasswordChange = (text) => {
+    setUserdetails({ ...userdetails, password: text });
+  };
+
+  const handleSignIn = async () => {
+    setLoading(true);
+    try {
+      const response = await signin(userdetails.email, userdetails.password);
+      dispatch(SIGNIN(response.others));
+      savetostore("accessToken", response?.accessToken);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async (data) => {
+    try {
+      const response = await signinwithgoogle(data);
+      dispatch(SIGNIN(response.others));
+      savetostore("accessToken", response?.accessToken);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -32,6 +120,7 @@ const SignInScreen = () => {
         <View>
           <View style={styles.textbox}>
             <TextInput
+              onChangeText={(text) => handleEmailChange(text)}
               placeholder="Email address"
               keyboardType="default"
               placeholderTextColor="#AFAEAE"
@@ -39,6 +128,7 @@ const SignInScreen = () => {
           </View>
           <View style={styles.passwordbox}>
             <TextInput
+              onChangeText={(text) => handlePasswordChange(text)}
               style={styles.passwordboxinput}
               placeholder="Password"
               keyboardType="default"
@@ -51,11 +141,12 @@ const SignInScreen = () => {
               />
             </Pressable>
           </View>
-          <Pressable
-            onPress={() => navigation.navigate("forgot")}
-            style={styles.blackbtn}
-          >
-            <Text style={styles.btntext}>SiGN In</Text>
+          <Pressable onPress={handleSignIn} style={styles.blackbtn}>
+            {loading ? (
+              <ActivityIndicator size={"large"} color={"white"} />
+            ) : (
+              <Text style={styles.btntext}>SiGN In</Text>
+            )}
           </Pressable>
         </View>
         <View style={{ marginVertical: 24 }}>
@@ -64,10 +155,10 @@ const SignInScreen = () => {
         <View style={styles.orCon}>
           <Ordivider />
         </View>
-        <View style={styles.googlecon}>
-          <Google />
+        <Pressable onPress={() => promptAsync()} style={styles.googlecon}>
+          <Googlelogo />
           <Text style={styles.googletext}>SIGN IN WITH GOOGLE</Text>
-        </View>
+        </Pressable>
       </View>
       <View style={styles.account}>
         <Text style={styles.already}>New here?</Text>

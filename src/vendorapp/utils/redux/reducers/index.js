@@ -19,8 +19,10 @@ import paymentrequestsuccess from "../slices/paymentrequestsuccess";
 import productdetailsmodal from "../slices/productdetailsmodal";
 import editproduct from "../slices/editproduct";
 import editproductsuccess from "../slices/editproductsuccess";
+import userslice from "../slices/userslice";
 
 const rootReducer = combineReducers({
+  userslice: userslice,
   setpaymentmodal: setpaymentmodal,
   successmodal: successmodal,
   completejobmodal: completejobmodal,

@@ -47,6 +47,9 @@ const Paymentmodal = ({ isVisible, closeModal, currentScreenName }) => {
       isVisible={isVisible}
       onBackdropPress={closeModal}
       onModalHide={checkifmodalisclosed}
+      swipeDirection={["down"]}
+      onSwipeComplete={closeModal}
+      propagateSwipe={true}
     >
       <View style={styles.modalcon}>
         <View style={styles.content}>
