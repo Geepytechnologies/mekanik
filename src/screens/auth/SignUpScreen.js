@@ -24,6 +24,8 @@ WebBrowser.maybeCompleteAuthSession();
 const SignUpScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
+  const [error, setError] = useState({ status: false, message: "" });
+  const [loading, setLoading] = useState(false);
   const [userdetails, setUserdetails] = useState({
     fullname: "",
     email: "",
@@ -36,8 +38,10 @@ const SignUpScreen = () => {
   };
   const [request, response, promptAsync] = Google.useAuthRequest(
     {
-      androidClientId: process.env.EXPO_PUBLIC_ANDROIDCLIENTID,
-      expoClientId: process.env.EXPO_PUBLIC_EXPOCLIENTID,
+      androidClientId:
+        "907851189600-m3jflgmmid8r17uofllp1n2idr33mpud.apps.googleusercontent.com",
+      expoClientId:
+        "907851189600-fehuhselu25c58vq4fpngkua7g98ad1s.apps.googleusercontent.com",
       scopes: ["profile", "email", "openid"],
     }
     // { authorizationEndpoint: "https://accounts.google.com/o/oauth2/v2/auth" }
@@ -102,7 +106,9 @@ const SignUpScreen = () => {
         navigation.replace("signIn");
       }
     } catch (error) {
-      console.log(error);
+      if (error) {
+        setError({ status: true, message: error?.response.data });
+      }
     } finally {
       setLoading(false);
     }

@@ -20,13 +20,16 @@ import { ActivityIndicator } from "react-native";
 import { savetostore } from "../../utils/storage";
 import { useDispatch } from "react-redux";
 import { SIGNIN } from "../../utils/redux/slices/userslice";
+import { usePushNotifications } from "../../../hooks/usePushNotifications";
 
 WebBrowser.maybeCompleteAuthSession();
 
 const SignInScreen = () => {
+  const { sendPushNotification } = usePushNotifications();
   const [user, setUser] = useState();
   const navigation = useNavigation();
   const [userdetails, setUserdetails] = useState({ email: "", password: "" });
+  const [error, setError] = useState({ status: false, message: "" });
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -76,10 +79,13 @@ const SignInScreen = () => {
     setUser(userinfo);
   };
   const handleEmailChange = (text) => {
+    setError({ status: false, message: "" });
     setUserdetails({ ...userdetails, email: text });
   };
 
   const handlePasswordChange = (text) => {
+    setError({ status: false, message: "" });
+
     setUserdetails({ ...userdetails, password: text });
   };
 
@@ -87,10 +93,15 @@ const SignInScreen = () => {
     setLoading(true);
     try {
       const response = await signin(userdetails.email, userdetails.password);
-      dispatch(SIGNIN(response.others));
-      savetostore("vendoraccessToken", response?.accessToken);
+      if (response) {
+        dispatch(SIGNIN(response.others));
+        savetostore("vendoraccessToken", response?.accessToken);
+        sendPushNotification("Welcome back to Mekanik", "New user Login", {});
+      }
     } catch (error) {
-      console.log(error);
+      if (error) {
+        setError({ status: true, message: error?.response.data });
+      }
     } finally {
       setLoading(false);
     }
@@ -100,7 +111,8 @@ const SignInScreen = () => {
     try {
       const response = await signinwithgoogle(data);
       dispatch(SIGNIN(response.others));
-      savetostore("accessToken", response?.accessToken);
+      savetostore("vendoraccessToken", response?.accessToken);
+      sendPushNotification("Welcome back to Mekanik", "New user Login", {});
     } catch (error) {
       console.log(error);
     } finally {
@@ -118,7 +130,7 @@ const SignInScreen = () => {
         </View>
         {/* form */}
         <View>
-          <View style={styles.textbox}>
+          <View style={[styles.textbox, error.status && styles.textboxerror]}>
             <TextInput
               onChangeText={(text) => handleEmailChange(text)}
               placeholder="Email address"
@@ -126,7 +138,9 @@ const SignInScreen = () => {
               placeholderTextColor="#AFAEAE"
             />
           </View>
-          <View style={styles.passwordbox}>
+          <View
+            style={[styles.passwordbox, error.status && styles.textboxerror]}
+          >
             <TextInput
               onChangeText={(text) => handlePasswordChange(text)}
               style={styles.passwordboxinput}
@@ -141,6 +155,7 @@ const SignInScreen = () => {
               />
             </Pressable>
           </View>
+          {error.status && <Text style={styles.error}>{error.message}</Text>}
           <Pressable onPress={handleSignIn} style={styles.blackbtn}>
             {loading ? (
               <ActivityIndicator size={"large"} color={"white"} />
@@ -221,6 +236,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     marginBottom: 16,
   },
+  textboxerror: {
+    backgroundColor: "#F8F8F8",
+    borderStyle: "solid",
+    borderWidth: 1,
+    paddingVertical: 18,
+    paddingHorizontal: 16,
+    marginBottom: 16,
+    borderColor: "red",
+    borderBottomColor: "red",
+    borderBottomStyle: "solid",
+    borderBottomWidth: 1,
+  },
   orCon: {
     display: "flex",
     alignItems: "center",
@@ -269,6 +296,13 @@ const styles = StyleSheet.create({
   forgot: {
     color: "#0059FF",
     fontSize: 12,
+    fontFamily: "Lexend600",
+    textTransform: "uppercase",
+    lineHeight: 20,
+  },
+  error: {
+    color: "red",
+    fontSize: 10,
     fontFamily: "Lexend600",
     textTransform: "uppercase",
     lineHeight: 20,

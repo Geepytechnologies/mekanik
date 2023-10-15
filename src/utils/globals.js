@@ -1,1 +1,4 @@
-export const API_URL = process.env.EXPO_PUBLIC_API_URL;
+export const API_URL = "https://attractive-belt-deer.cyclic.app";
+// export const API_URL = "http://192.168.0.3:5000";
+
+console.log({ api: API_URL });
