@@ -20,15 +20,33 @@ import Editprofile from "../screens/settings/screens/Editprofile";
 import Updatepassword from "../screens/settings/screens/Updatepassword";
 import { usePushNotifications } from "../hooks/usePushNotifications";
 import { io } from "socket.io-client";
-import { useAuthentication } from "../hooks/useAuthentication";
+import { useDispatch, useSelector } from "react-redux";
+import { AUTHENTICATE } from "../utils/redux/slices/authslice";
+import { validateaccesstoken } from "../utils/usermethods";
+import { getValueFromstore } from "../utils/storage";
 
 const Stack = createNativeStackNavigator();
 
 const Navigator = () => {
-  // Access the current route name using the navigation object
-
   const { sendPushNotification } = usePushNotifications();
-  const { isAuthenticated } = useAuthentication();
+  const dispatch = useDispatch();
+
+  const authenticate = async () => {
+    try {
+      const response = await validateaccesstoken();
+      if (response.status == true) {
+        dispatch(SIGNIN(response.others));
+        dispatch(AUTHENTICATE(true));
+      } else {
+        dispatch(AUTHENTICATE(false));
+      }
+    } catch (error) {}
+  };
+  useEffect(() => {
+    authenticate();
+  }, []);
+
+  const { isAuthenticated } = useSelector((state) => state.authslice);
 
   const [socket, setSocket] = useState(null);
 

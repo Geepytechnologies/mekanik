@@ -10,7 +10,7 @@
     "splash": {
       "image": "./assets/images/newlogo.png",
       "resizeMode": "contain",
-      "backgroundColor": "#000000"
+      "backgroundColor": "#ffffff"
     },
     "plugins": [
       [
@@ -20,9 +20,6 @@
         }
       ]
     ],
-    "notification": {
-      "icon": "./assets/images/notificationlogo.png"
-    },
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,

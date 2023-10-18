@@ -12,6 +12,7 @@ import Signout from "../svgs/Signout";
 import { useDispatch, useSelector } from "react-redux";
 import { SIGNOUT } from "../../../utils/redux/slices/userslice";
 import { deleteFromstore } from "../../../utils/storage";
+import { AUTHENTICATE } from "../../../utils/redux/slices/authslice";
 
 const SettingsHomeScreen = ({ navigation }) => {
   const { currentuser } = useSelector((state) => state.userslice);
@@ -38,6 +39,7 @@ const SettingsHomeScreen = ({ navigation }) => {
   }
   const signout = async () => {
     dispatch(SIGNOUT());
+    dispatch(AUTHENTICATE(false));
     await deleteFromstore("accessToken");
   };
   return (

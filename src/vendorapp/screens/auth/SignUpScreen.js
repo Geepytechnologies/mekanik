@@ -11,16 +11,78 @@ import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import Google from "../../../components/svgs/Google";
+import GoogleLogo from "../../../components/svgs/Google";
 import Ordivider from "../../../components/Ordivider";
 import { Picker } from "@react-native-picker/picker";
+import { signinwithgoogle } from "../../utils/usermethods";
+import * as WebBrowser from "expo-web-browser";
+import * as Google from "expo-auth-session/providers/google";
+
+WebBrowser.maybeCompleteAuthSession();
 
 const SignUpScreen = () => {
   const [selectedValue, setSelectedValue] = useState("");
+  const dispatch = useDispatch();
   const navigation = useNavigation();
+  const [error, setError] = useState({ status: false, message: "" });
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
+  };
+  const [request, response, promptAsync] = Google.useAuthRequest(
+    {
+      androidClientId:
+        "907851189600-r7tofn8rgho8ov66a00iaq94isnmbifl.apps.googleusercontent.com",
+      expoClientId:
+        "907851189600-fehuhselu25c58vq4fpngkua7g98ad1s.apps.googleusercontent.com",
+      iosClientId:
+        "907851189600-mse0vf5akh5v2opj8n6d4f9nronbi18n.apps.googleusercontent.com",
+      scopes: ["profile", "email", "openid"],
+    }
+    // { authorizationEndpoint: "https://accounts.google.com/o/oauth2/v2/auth" }
+  );
+  useEffect(() => {
+    WebBrowser.warmUpAsync();
+    return () => {
+      WebBrowser.coolDownAsync();
+    };
+  }, []);
+
+  useEffect(() => {
+    signInWithGoogle();
+  }, [response]);
+
+  const signInWithGoogle = async () => {
+    if (response?.type === "success") {
+      const token =
+        response.authentication?.accessToken ||
+        response.params?.access_token ||
+        response.params?.id_token;
+      await getUserInfo(token);
+    }
+  };
+
+  const getUserInfo = async (accessToken) => {
+    if (!accessToken) return;
+    let response = await fetch("https://www.googleapis.com/userinfo/v2/me", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    const userinfo = await response.json();
+    await handleGoogleSignUp(userinfo);
+    setUser(userinfo);
+  };
+  const handleGoogleSignUp = async (data) => {
+    try {
+      const response = await signinwithgoogle(data);
+      dispatch(SIGNIN(response.others));
+      savetostore("accessToken", response?.accessToken);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -145,7 +207,7 @@ const SignUpScreen = () => {
             <Ordivider />
           </View>
           <View style={styles.googlecon}>
-            <Google />
+            <GoogleLogo />
             <Text style={styles.googletext}>SIGN UP WITH GOOGLE</Text>
           </View>
         </View>

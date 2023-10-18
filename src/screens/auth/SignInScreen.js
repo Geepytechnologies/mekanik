@@ -21,6 +21,7 @@ import { savetostore } from "../../utils/storage";
 import { useDispatch } from "react-redux";
 import { SIGNIN } from "../../utils/redux/slices/userslice";
 import { usePushNotifications } from "../../hooks/usePushNotifications";
+import { AUTHENTICATE } from "../../utils/redux/slices/authslice";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -39,9 +40,11 @@ const SignInScreen = () => {
   const [request, response, promptAsync] = Google.useAuthRequest(
     {
       androidClientId:
-        "907851189600-m3jflgmmid8r17uofllp1n2idr33mpud.apps.googleusercontent.com",
+        "907851189600-r7tofn8rgho8ov66a00iaq94isnmbifl.apps.googleusercontent.com",
       expoClientId:
         "907851189600-fehuhselu25c58vq4fpngkua7g98ad1s.apps.googleusercontent.com",
+      iosClientId:
+        "907851189600-mse0vf5akh5v2opj8n6d4f9nronbi18n.apps.googleusercontent.com",
       scopes: ["profile", "email", "openid"],
     }
     // { authorizationEndpoint: "https://accounts.google.com/o/oauth2/v2/auth" }
@@ -94,9 +97,16 @@ const SignInScreen = () => {
     try {
       const response = await signin(userdetails.email, userdetails.password);
       if (response) {
+        dispatch(AUTHENTICATE(true));
         dispatch(SIGNIN(response.others));
+        const fullname = response.others?.fullname;
+        const username = fullname.split(" ")[0];
         savetostore("accessToken", response?.accessToken);
-        sendPushNotification("Welcome back to Mekanik", "New user Login", {});
+        sendPushNotification(
+          `Hello ${username}`,
+          "Welcome back to Mekanik",
+          {}
+        );
       }
     } catch (error) {
       if (error) {
@@ -110,9 +120,12 @@ const SignInScreen = () => {
   const handleGoogleSignIn = async (data) => {
     try {
       const response = await signinwithgoogle(data);
+      dispatch(AUTHENTICATE(true));
       dispatch(SIGNIN(response.others));
+      const fullname = response.others?.fullname;
+      const username = fullname.split(" ")[0];
       savetostore("accessToken", response?.accessToken);
-      sendPushNotification("Welcome back to Mekanik", "New user Login", {});
+      sendPushNotification(`Hello ${username}`, "Welcome back to Mekanik", {});
     } catch (error) {
       console.log(error);
     } finally {

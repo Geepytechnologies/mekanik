@@ -19,10 +19,6 @@ export const signin = async (email, password) => {
     password,
   });
   return response.data;
-  // try {
-  // } catch (err) {
-  //   console.warn(err);
-  // }
 };
 export const signinwithgoogle = async (data) => {
   try {
@@ -52,7 +48,7 @@ export const validateaccesstoken = async () => {
         },
       }
     );
-    return response;
+    return response.data;
   } catch (error) {
     console.error({ errorfromval: error });
   }

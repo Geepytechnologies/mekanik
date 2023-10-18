@@ -8,9 +8,9 @@ export async function getValueFromstore(key) {
   let result = await SecureStore.getItemAsync(key);
   try {
     if (result) {
-      return { value: result, status: true };
+      return result;
     } else {
-      return { value: `No value with key : ${key}`, status: false };
+      return `No value with key : ${key}`;
     }
   } catch (error) {
     return error;

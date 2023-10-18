@@ -15,6 +15,8 @@ import { usePushNotifications } from "./src/hooks/usePushNotifications";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ActivityIndicator } from "react-native";
 import Vendortonavigate from "./src/vendorapp/navigations/Vendortonavigate";
+import * as Device from "expo-device";
+// console.log({ device: Device });
 
 const queryClient = new QueryClient();
 

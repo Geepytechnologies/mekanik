@@ -11,8 +11,10 @@ import garagesuccessmodal from "../slices/garagesuccessmodal";
 import editsuccessmodal from "../slices/editsuccessmodal";
 import updatesuccessmodal from "../slices/updatesuccessmodal";
 import userslice from "../slices/userslice";
+import authslice from "../slices/authslice";
 
 const rootReducer = combineReducers({
+  authslice: authslice,
   userslice: userslice,
   rsm: rsmReducer,
   rm: rmReducer,

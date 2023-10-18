@@ -7,18 +7,18 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:907851189600:android:d0bd229a6826fb5619a205",
+        "mobilesdk_app_id": "1:907851189600:android:089a8e7bb4c426e719a205",
         "android_client_info": {
-          "package_name": "com.geepytech.mekanikApp"
+          "package_name": "com.geepytech.mekanikapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "907851189600-4avtmpqno3d9rjn5n798t88hc1vo77p9.apps.googleusercontent.com",
+          "client_id": "907851189600-r7tofn8rgho8ov66a00iaq94isnmbifl.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.geepytech.mekanikApp",
-            "certificate_hash": "f3b75f9ff75ecbd96be5eb75205b8c661869acd2"
+            "package_name": "com.geepytech.mekanikapp",
+            "certificate_hash": "d503b572e1ab794301c10d3dc6f153987a43dca4"
           }
         },
         {
@@ -35,7 +35,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "907851189600-q8apotl1f260g5hb7q9k3lug765riho0.apps.googleusercontent.com",
+              "client_id": "907851189600-fehuhselu25c58vq4fpngkua7g98ad1s.apps.googleusercontent.com",
               "client_type": 3
             },
             {
