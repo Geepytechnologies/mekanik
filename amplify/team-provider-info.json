@@ -1,0 +1,20 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-mekanik-staging-104228-authRole",
+      "UnauthRoleArn": "arn:aws:iam::374687131467:role/amplify-mekanik-staging-104228-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::374687131467:role/amplify-mekanik-staging-104228-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-mekanik-staging-104228-deployment",
+      "UnauthRoleName": "amplify-mekanik-staging-104228-unauthRole",
+      "StackName": "amplify-mekanik-staging-104228",
+      "StackId": "arn:aws:cloudformation:us-east-1:374687131467:stack/amplify-mekanik-staging-104228/a921a920-8d11-11ee-bcf0-0e84c7a02837",
+      "AmplifyAppId": "d1pefm04q7l6oj"
+    },
+    "categories": {
+      "auth": {
+        "mekanik": {}
+      }
+    }
+  }
+}

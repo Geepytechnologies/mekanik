@@ -20,7 +20,10 @@ import { ActivityIndicator } from "react-native";
 import { savetostore } from "../../utils/storage";
 import { useDispatch } from "react-redux";
 import { SIGNIN } from "../../utils/redux/slices/userslice";
-import { usePushNotifications } from "../../../hooks/usePushNotifications";
+import { usePushNotifications } from "../../hooks/usePushNotifications";
+import { AUTHENTICATE } from "../../utils/redux/slices/authslice";
+import { ANDROIDCLIENTID, API_URL, EXPOCLIENTID, IOSCLIENTID } from "../../../env";
+import axios from "axios";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -39,11 +42,11 @@ const SignInScreen = () => {
   const [request, response, promptAsync] = Google.useAuthRequest(
     {
       androidClientId:
-        "907851189600-r7tofn8rgho8ov66a00iaq94isnmbifl.apps.googleusercontent.com",
+        ANDROIDCLIENTID,
       expoClientId:
-        "907851189600-fehuhselu25c58vq4fpngkua7g98ad1s.apps.googleusercontent.com",
+        EXPOCLIENTID,
       iosClientId:
-        "907851189600-mse0vf5akh5v2opj8n6d4f9nronbi18n.apps.googleusercontent.com",
+        IOSCLIENTID,
       scopes: ["profile", "email", "openid"],
     }
     // { authorizationEndpoint: "https://accounts.google.com/o/oauth2/v2/auth" }
@@ -92,29 +95,65 @@ const SignInScreen = () => {
   };
 
   const handleSignIn = async () => {
+    // console.warn("i was called")
     setLoading(true);
     try {
-      const response = await signin(userdetails.email, userdetails.password);
+      // const response = await signin(userdetails.email, userdetails.password);
+      const response = await axios.post(`${API_URL}/api/userapp/auth/signin`, {
+        email: userdetails.email,
+        password: userdetails.password,
+      });
+      console.warn("i ran a response")
+
+      // console.log({ res: response, loading: loading })
+      // console.log(response)
+      // const response = true
       if (response) {
-        dispatch(SIGNIN(response.others));
-        savetostore("vendoraccessToken", response?.accessToken);
-        sendPushNotification("Welcome back to Mekanik", "New user Login", {});
+        console.log({ res: response, loading: loading })
+        console.warn("there was a response")
+
+
+        dispatch(AUTHENTICATE(true));
+        dispatch(SIGNIN(response.data.others));
+        const fullname = response.data.others?.fullname;
+        const username = fullname.split(" ")[0];
+        savetostore("accessToken", response.data?.accessToken);
+        sendPushNotification(
+          `Hello ${username}`,
+          "Welcome back to Mekanik",
+          {}
+        );
       }
     } catch (error) {
       if (error) {
-        setError({ status: true, message: error?.response.data });
+        setLoading(false);
+        console.log({ loadingerror: error })
+        console.warn("there was an error")
+
+
+
+        setError({ status: true, message: error?.response?.data });
       }
     } finally {
       setLoading(false);
+
+
+
     }
+  };
+  const handlePress = async () => {
+    await handleSignIn();
   };
 
   const handleGoogleSignIn = async (data) => {
     try {
       const response = await signinwithgoogle(data);
+      dispatch(AUTHENTICATE(true));
       dispatch(SIGNIN(response.others));
-      savetostore("vendoraccessToken", response?.accessToken);
-      sendPushNotification("Welcome back to Mekanik", "New user Login", {});
+      const fullname = response.others?.fullname;
+      const username = fullname.split(" ")[0];
+      savetostore("accessToken", response?.accessToken);
+      sendPushNotification(`Hello ${username}`, "Welcome back to Mekanik", {});
     } catch (error) {
       console.log(error);
     } finally {
@@ -158,11 +197,11 @@ const SignInScreen = () => {
             </Pressable>
           </View>
           {error.status && <Text style={styles.error}>{error.message}</Text>}
-          <Pressable onPress={handleSignIn} style={styles.blackbtn}>
+          <Pressable onPress={handlePress} style={styles.blackbtn}>
             {loading ? (
               <ActivityIndicator size={"large"} color={"white"} />
             ) : (
-              <Text style={styles.btntext}>SiGN In</Text>
+              <Text style={styles.btntext}>SIGN In</Text>
             )}
           </Pressable>
         </View>
@@ -179,7 +218,9 @@ const SignInScreen = () => {
       </View>
       <View style={styles.account}>
         <Text style={styles.already}>New here?</Text>
-        <Text style={styles.signin}>CREATE ACCOUNT</Text>
+        <Pressable onPress={() => navigation.navigate("signUp")}>
+          <Text style={styles.signin}>CREATE ACCOUNT</Text>
+        </Pressable>
       </View>
     </SafeAreaView>
   );

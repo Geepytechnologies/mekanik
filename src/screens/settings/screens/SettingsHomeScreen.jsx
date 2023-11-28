@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Image } from "react-native";
@@ -172,10 +172,10 @@ const SettingsHomeScreen = ({ navigation }) => {
               <Support />
               <Text style={styles.profiletext}>Contact support</Text>
             </View>
-            <Pressable onPress={signout} style={styles.profilesingle}>
+            <TouchableOpacity onPress={signout} style={styles.profilesingle}>
               <Signout />
               <Text style={styles.profiletextred}>Sign out</Text>
-            </Pressable>
+            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>

@@ -52,7 +52,8 @@ const Chatmechanic = ({ route }) => {
       sendPushNotification("Mekanik", msg, {
         time: "",
       });
-      setMessages((prevMessages) => [...prevMessages, msg]);
+      dispatch(ADD_MESSAGE(msg))
+      // setMessages((prevMessages) => [...prevMessages, msg]);
     });
 
     // Clean up the socket connection when the component unmounts

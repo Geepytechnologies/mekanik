@@ -17,6 +17,7 @@ import { Picker } from "@react-native-picker/picker";
 import { signinwithgoogle } from "../../utils/usermethods";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
+import { ANDROIDCLIENTID, EXPOCLIENTID, IOSCLIENTID } from "../../../../env";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -32,11 +33,11 @@ const SignUpScreen = () => {
   const [request, response, promptAsync] = Google.useAuthRequest(
     {
       androidClientId:
-        "907851189600-r7tofn8rgho8ov66a00iaq94isnmbifl.apps.googleusercontent.com",
+        ANDROIDCLIENTID,
       expoClientId:
-        "907851189600-fehuhselu25c58vq4fpngkua7g98ad1s.apps.googleusercontent.com",
+        EXPOCLIENTID,
       iosClientId:
-        "907851189600-mse0vf5akh5v2opj8n6d4f9nronbi18n.apps.googleusercontent.com",
+        IOSCLIENTID,
       scopes: ["profile", "email", "openid"],
     }
     // { authorizationEndpoint: "https://accounts.google.com/o/oauth2/v2/auth" }

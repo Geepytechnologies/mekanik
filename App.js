@@ -1,21 +1,23 @@
-import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
-import Navigator from "./src/navigation";
 import { loadCustomFonts } from "./src/utils/fonts";
 import { useEffect, useState } from "react";
-import { Provider } from "react-redux";
-import store from "./src/utils/redux/store";
-import SplashScreen from "./src/components/SplashScreen";
-import VendorNavigator from "./src/vendorapp/navigations";
-import { NavigationContainer } from "@react-navigation/native";
-import vendorstore from "./src/vendorapp/utils/redux/store";
+import { Provider, useSelector } from "react-redux";
+
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import DealerNavigator from "./src/vendorapp/navigations/DealerNavigator";
 import { usePushNotifications } from "./src/hooks/usePushNotifications";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ActivityIndicator } from "react-native";
-import Vendortonavigate from "./src/vendorapp/navigations/Vendortonavigate";
 import * as Device from "expo-device";
+import SplashNavigator from "./src/components/navigators/SplashNavigator";
+import VendorAppNavigator from "./src/components/navigators/VendorAppNavigator";
+import UserAppNavigator from "./src/components/navigators/UserAppNavigator";
+import globalstore from "./src/globalutils/redux/globalstore";
+import { NavigationContainer } from "@react-navigation/native";
+import SplashScreen from "./src/components/SplashScreen";
+import Amplify from "aws-amplify";
+import config from "./src/aws-exports";
+
+Amplify.configure(config);
 // console.log({ device: Device });
 
 const queryClient = new QueryClient();
@@ -23,7 +25,7 @@ const queryClient = new QueryClient();
 export default function App() {
   const { sendPushNotification } = usePushNotifications();
   const [isFontLoaded, setIsFontLoaded] = useState(false);
-  const [mekanik, setMekanik] = useState(null);
+  const [usertype, setUsertype] = useState(null);
 
   useEffect(() => {
     const loadFonts = async () => {
@@ -44,40 +46,27 @@ export default function App() {
   const Stack = createNativeStackNavigator();
   return (
     <>
-      <QueryClientProvider client={queryClient}>
-        {mekanik ? (
-          mekanik === "user" ? (
-            <Provider store={store}>
-              <View style={styles.container}>
-                <Navigator />
-                <StatusBar style="auto" />
-              </View>
-            </Provider>
-          ) : (
-            <Provider store={vendorstore}>
-              <View style={styles.container}>
-                {/* <VendorNavigator /> */}
-                {/* <DealerNavigator /> */}
-                <Vendortonavigate />
-                <StatusBar style="auto" />
-              </View>
-            </Provider>
-          )
+      {usertype ? (
+        usertype === "user" ? (
+          <UserAppNavigator />
         ) : (
-          <NavigationContainer>
-            <Stack.Navigator initialRouteName="splash">
-              <Stack.Screen
-                name="splash"
-                options={{
-                  headerShown: false,
-                }}
-              >
-                {(props) => <SplashScreen {...props} setMekanik={setMekanik} />}
-              </Stack.Screen>
-            </Stack.Navigator>
-          </NavigationContainer>
-        )}
-      </QueryClientProvider>
+          <VendorAppNavigator />
+        )
+      ) : (
+        // <SplashScreen setUsertype={setUsertype} />
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="splash">
+            <Stack.Screen
+              name="splash"
+              options={{
+                headerShown: false,
+              }}
+            >
+              {(props) => <SplashScreen {...props} setUsertype={setUsertype} />}
+            </Stack.Screen>
+          </Stack.Navigator>
+        </NavigationContainer>
+      )}
     </>
   );
 }

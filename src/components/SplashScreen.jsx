@@ -11,8 +11,11 @@ import React, { useEffect } from "react";
 import { Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-const SplashScreen = ({ setMekanik }) => {
+const SplashScreen = ({ setUsertype }) => {
   const navigation = useNavigation();
+  const handleUserTypeSelection = (userType) => {
+    setUsertype(userType);
+  };
   // useEffect(() => {
   //   const timer = setTimeout(() => {
   //     navigation.navigate("signUp");
@@ -40,11 +43,14 @@ const SplashScreen = ({ setMekanik }) => {
         </View>
         {/* buttons */}
         <View style={styles.buttonCon}>
-          <Pressable onPress={() => setMekanik("user")} style={styles.blackbtn}>
+          <Pressable
+            onPress={() => handleUserTypeSelection('user')}
+            style={styles.blackbtn}
+          >
             <Text style={styles.btntext}>I&apos;m a car owner</Text>
           </Pressable>
           <Pressable
-            onPress={() => setMekanik("vendor")}
+            onPress={() => handleUserTypeSelection('vendor')}
             style={styles.whitebtn}
           >
             <Text>I&apos;m a vendor</Text>

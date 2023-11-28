@@ -12,26 +12,27 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import Googlelogo from "../../components/svgs/Google";
 import Ordivider from "../../components/Ordivider";
-import { signinwithgoogle, signup } from "../../utils/usermethods";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
+import { makeRedirectUri } from "expo-auth-session";
+import { signin, signinwithgoogle } from "../../utils/usermethods";
+import { ActivityIndicator } from "react-native";
 import { savetostore } from "../../utils/storage";
 import { useDispatch } from "react-redux";
 import { SIGNIN } from "../../utils/redux/slices/userslice";
+import { usePushNotifications } from "../../../hooks/usePushNotifications";
+import { ANDROIDCLIENTID, EXPOCLIENTID, IOSCLIENTID } from "../../../../env";
 
 WebBrowser.maybeCompleteAuthSession();
 
-const SignUpScreen = () => {
-  const dispatch = useDispatch();
+const SignInScreen = () => {
+  const { sendPushNotification } = usePushNotifications();
+  const [user, setUser] = useState();
   const navigation = useNavigation();
+  const [userdetails, setUserdetails] = useState({ email: "", password: "" });
   const [error, setError] = useState({ status: false, message: "" });
   const [loading, setLoading] = useState(false);
-  const [userdetails, setUserdetails] = useState({
-    fullname: "",
-    email: "",
-    phone: "",
-    password: "",
-  });
+  const dispatch = useDispatch();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
@@ -39,11 +40,11 @@ const SignUpScreen = () => {
   const [request, response, promptAsync] = Google.useAuthRequest(
     {
       androidClientId:
-        "907851189600-r7tofn8rgho8ov66a00iaq94isnmbifl.apps.googleusercontent.com",
+        ANDROIDCLIENTID,
       expoClientId:
-        "907851189600-fehuhselu25c58vq4fpngkua7g98ad1s.apps.googleusercontent.com",
+        EXPOCLIENTID,
       iosClientId:
-        "907851189600-mse0vf5akh5v2opj8n6d4f9nronbi18n.apps.googleusercontent.com",
+        IOSCLIENTID,
       scopes: ["profile", "email", "openid"],
     }
     // { authorizationEndpoint: "https://accounts.google.com/o/oauth2/v2/auth" }
@@ -77,35 +78,28 @@ const SignUpScreen = () => {
       },
     });
     const userinfo = await response.json();
-    await handleGoogleSignUp(userinfo);
+    await handleGoogleSignIn(userinfo);
     setUser(userinfo);
   };
-
-  const handleFullnameChange = (text) => {
-    setUserdetails({ ...userdetails, fullname: text });
-  };
   const handleEmailChange = (text) => {
+    setError({ status: false, message: "" });
     setUserdetails({ ...userdetails, email: text });
-  };
-  const handlePhoneChange = (text) => {
-    setUserdetails({ ...userdetails, phone: text });
   };
 
   const handlePasswordChange = (text) => {
+    setError({ status: false, message: "" });
+
     setUserdetails({ ...userdetails, password: text });
   };
 
-  const handleSignUp = async () => {
+  const handleSignIn = async () => {
     setLoading(true);
     try {
-      const response = await signup(
-        userdetails.fullname,
-        userdetails.email,
-        userdetails.phone,
-        userdetails.password
-      );
+      const response = await signin(userdetails.email, userdetails.password);
       if (response) {
-        navigation.replace("signIn");
+        dispatch(SIGNIN(response.others));
+        savetostore("vendoraccessToken", response?.accessToken);
+        sendPushNotification("Welcome back to Mekanik", "New user Login", {});
       }
     } catch (error) {
       if (error) {
@@ -116,11 +110,12 @@ const SignUpScreen = () => {
     }
   };
 
-  const handleGoogleSignUp = async (data) => {
+  const handleGoogleSignIn = async (data) => {
     try {
       const response = await signinwithgoogle(data);
       dispatch(SIGNIN(response.others));
-      savetostore("accessToken", response?.accessToken);
+      savetostore("vendoraccessToken", response?.accessToken);
+      sendPushNotification("Welcome back to Mekanik", "New user Login", {});
     } catch (error) {
       console.log(error);
     } finally {
@@ -131,59 +126,24 @@ const SignUpScreen = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.innercon}>
         <View style={styles.options}>
-          <View style={styles.option1}>
-            <Text
-              style={{
-                fontSize: 14,
-                color: "#0D0D0D",
-                fontFamily: "Lexend500",
-              }}
-            >
-              Car Owner
-            </Text>
-          </View>
-          <View style={styles.option2}>
-            <Text
-              style={{
-                fontSize: 14,
-                color: "#AFAEAE",
-                fontFamily: "Lexend500",
-              }}
-            >
-              Vendor
-            </Text>
-          </View>
+          <Text style={styles.welcome}>Welcome!</Text>
+          <Text style={styles.subtitle}>
+            Fill in your details to sign in to your account.
+          </Text>
         </View>
         {/* form */}
         <View>
-          <View style={styles.textbox}>
-            <TextInput
-              onChangeText={(text) => handleFullnameChange(text)}
-              style={{ fontFamily: "Lexend300", fontSize: 14 }}
-              placeholder="Full Name"
-              keyboardType="default"
-              placeholderTextColor="#AFAEAE"
-            />
-          </View>
-          <View style={styles.textbox}>
-            <TextInput
-              onChangeText={(text) => handlePhoneChange(text)}
-              styles={{ fontFamily: "Lexend300", fontSize: 14 }}
-              placeholder="Phone Number"
-              keyboardType="default"
-              placeholderTextColor="#AFAEAE"
-            />
-          </View>
-          <View style={styles.textbox}>
+          <View style={[styles.textbox, error.status && styles.textboxerror]}>
             <TextInput
               onChangeText={(text) => handleEmailChange(text)}
-              styles={{ fontFamily: "Lexend300", fontSize: 14 }}
-              placeholder="Email"
+              placeholder="Email address"
               keyboardType="default"
               placeholderTextColor="#AFAEAE"
             />
           </View>
-          <View style={styles.passwordbox}>
+          <View
+            style={[styles.passwordbox, error.status && styles.textboxerror]}
+          >
             <TextInput
               onChangeText={(text) => handlePasswordChange(text)}
               style={styles.passwordboxinput}
@@ -198,40 +158,41 @@ const SignUpScreen = () => {
               />
             </Pressable>
           </View>
-          <Pressable onPress={handleSignUp} style={styles.blackbtn}>
+          {error.status && <Text style={styles.error}>{error.message}</Text>}
+          <Pressable onPress={handleSignIn} style={styles.blackbtn}>
             {loading ? (
               <ActivityIndicator size={"large"} color={"white"} />
             ) : (
-              <Text style={styles.btntext}>CREATE ACCOUNT</Text>
+              <Text style={styles.btntext}>SiGN In</Text>
             )}
           </Pressable>
+        </View>
+        <View style={{ marginVertical: 24 }}>
+          <Text style={styles.forgot}>Forgot Password?</Text>
         </View>
         <View style={styles.orCon}>
           <Ordivider />
         </View>
         <Pressable onPress={() => promptAsync()} style={styles.googlecon}>
           <Googlelogo />
-          <Text style={styles.googletext}>SIGN UP WITH GOOGLE</Text>
+          <Text style={styles.googletext}>SIGN IN WITH GOOGLE</Text>
         </Pressable>
       </View>
       <View style={styles.account}>
-        <Text style={styles.already}>Already have an account?</Text>
-        <Pressable onPress={() => navigation.replace("signIn")}>
-          <Text style={styles.signin}>SIGN IN</Text>
-        </Pressable>
+        <Text style={styles.already}>New here?</Text>
+        <Text style={styles.signin}>CREATE ACCOUNT</Text>
       </View>
     </SafeAreaView>
   );
 };
 
-export default SignUpScreen;
+export default SignInScreen;
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff",
     flexDirection: "column",
     flex: 1,
-    marginTop: 24,
   },
   innercon: {
     padding: 16,
@@ -248,8 +209,9 @@ const styles = StyleSheet.create({
     color: "#FFF",
     textAlign: "center",
     fontSize: 12,
-    fontFamily: "Lexend700",
+    fontFamily: "Lexend",
     fontStyle: "normal",
+    fontWeight: "700",
     lineHeight: 20,
     textTransform: "uppercase",
   },
@@ -277,6 +239,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     marginBottom: 16,
   },
+  textboxerror: {
+    backgroundColor: "#F8F8F8",
+    borderStyle: "solid",
+    borderWidth: 1,
+    paddingVertical: 18,
+    paddingHorizontal: 16,
+    marginBottom: 16,
+    borderColor: "red",
+    borderBottomColor: "red",
+    borderBottomStyle: "solid",
+    borderBottomWidth: 1,
+  },
   orCon: {
     display: "flex",
     alignItems: "center",
@@ -300,22 +274,9 @@ const styles = StyleSheet.create({
   },
   options: {
     display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 24,
+    justifyContent: "center",
+    gap: 4,
     marginBottom: 24,
-  },
-  option1: {
-    borderBottomColor: "#0059FF",
-    borderBottomStyle: "solid",
-    borderBottomWidth: 4,
-    paddingBottom: 8,
-  },
-  option2: {
-    borderBottomColor: "#0059FF",
-    borderBottomStyle: "solid",
-    borderBottomWidth: 0,
-    paddingBottom: 8,
   },
   account: {
     display: "flex",
@@ -330,6 +291,35 @@ const styles = StyleSheet.create({
   },
   already: {
     color: "#0D0D0D",
+    fontSize: 14,
+    fontFamily: "Lexend300",
+    fontStyle: "normal",
+    lineHeight: 20,
+  },
+  forgot: {
+    color: "#0059FF",
+    fontSize: 12,
+    fontFamily: "Lexend600",
+    textTransform: "uppercase",
+    lineHeight: 20,
+  },
+  error: {
+    color: "red",
+    fontSize: 10,
+    fontFamily: "Lexend600",
+    textTransform: "uppercase",
+    lineHeight: 20,
+  },
+  welcome: {
+    color: "#0D0D0D",
+    fontSize: 24,
+    fontFamily: "clashDisplaymedium",
+    fontStyle: "normal",
+    fontWeight: "500",
+    lineHeight: 32,
+  },
+  subtitle: {
+    color: "#525252",
     fontSize: 14,
     fontFamily: "Lexend300",
     fontStyle: "normal",

@@ -30,7 +30,7 @@ const DealerNavigator = () => {
     <NavigationContainer theme={theme}>
       <Stack.Navigator
         initialRouteName="main"
-        // screenOptions={{ headerStyle: { backgroundColor: 'red' } }}
+      // screenOptions={{ headerStyle: { backgroundColor: 'red' } }}
       >
         <Stack.Screen
           name="main"

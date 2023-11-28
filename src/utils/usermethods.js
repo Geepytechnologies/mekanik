@@ -14,11 +14,15 @@ export const signup = async (fullname, email, phone, password) => {
   } catch (err) {}
 };
 export const signin = async (email, password) => {
-  const response = await axios.post(`${API_URL}/api/userapp/auth/signin`, {
-    email,
-    password,
-  });
-  return response.data;
+  try {
+    const response = await axios.post(`${API_URL}/api/userapp/auth/signin`, {
+      email,
+      password,
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 };
 export const signinwithgoogle = async (data) => {
   try {
