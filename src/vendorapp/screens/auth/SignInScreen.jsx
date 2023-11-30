@@ -22,6 +22,7 @@ import { useDispatch } from "react-redux";
 import { SIGNIN } from "../../utils/redux/slices/userslice";
 import { usePushNotifications } from "../../../hooks/usePushNotifications";
 import { ANDROIDCLIENTID, EXPOCLIENTID, IOSCLIENTID } from "../../../../env";
+import { Auth } from "aws-amplify";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -95,18 +96,36 @@ const SignInScreen = () => {
   const handleSignIn = async () => {
     setLoading(true);
     try {
-      const response = await signin(userdetails.email, userdetails.password);
+      const response = await Auth.signIn({ username: userdetails.email, password: userdetails.password })
       if (response) {
-        dispatch(SIGNIN(response.others));
-        savetostore("vendoraccessToken", response?.accessToken);
-        sendPushNotification("Welcome back to Mekanik", "New user Login", {});
+
+
+
+        dispatch(AUTHENTICATE(true));
+        dispatch(SIGNIN(response.attributes));
+        const fullname = response.attributes?.name;
+        const username = fullname.split(" ")[0];
+        sendPushNotification(
+          `Hello ${username}`,
+          "Welcome back to Mekanik",
+          {}
+        );
       }
     } catch (error) {
       if (error) {
-        setError({ status: true, message: error?.response.data });
+        setLoading(false);
+        console.log({ loadingerror: error })
+        console.warn("there was an error")
+
+
+
+        setError({ status: true, message: error?.response?.data });
       }
     } finally {
       setLoading(false);
+
+
+
     }
   };
 

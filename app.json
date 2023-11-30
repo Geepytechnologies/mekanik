@@ -4,7 +4,7 @@
     "slug": "mekanikapp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "scheme": "com.geepytech.mekanikapp",
+    "scheme": "mekanikapp",
     "icon": "./assets/images/newlogo.png",
     "userInterfaceStyle": "light",
     "splash": {

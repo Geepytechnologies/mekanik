@@ -30,7 +30,7 @@ const Home = ({ navigation }) => {
   const { showpaysuccess } = useSelector((state) => state.paymentsuccessmodal);
   const { currentuser } = useSelector((state) => state.userslice);
 
-  const username = currentuser?.fullname.split(" ")[0];
+  const username = currentuser?.name.split(" ")[0];
 
   const dispatch = useDispatch();
 

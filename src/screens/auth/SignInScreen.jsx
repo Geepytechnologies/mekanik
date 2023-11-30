@@ -24,6 +24,7 @@ import { usePushNotifications } from "../../hooks/usePushNotifications";
 import { AUTHENTICATE } from "../../utils/redux/slices/authslice";
 import { ANDROIDCLIENTID, API_URL, EXPOCLIENTID, IOSCLIENTID } from "../../../env";
 import axios from "axios";
+import { Auth } from "aws-amplify";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -95,29 +96,17 @@ const SignInScreen = () => {
   };
 
   const handleSignIn = async () => {
-    // console.warn("i was called")
     setLoading(true);
     try {
-      // const response = await signin(userdetails.email, userdetails.password);
-      const response = await axios.post(`${API_URL}/api/userapp/auth/signin`, {
-        email: userdetails.email,
-        password: userdetails.password,
-      });
-      console.warn("i ran a response")
-
-      // console.log({ res: response, loading: loading })
-      // console.log(response)
-      // const response = true
+      const response = await Auth.signIn({ username: userdetails.email, password: userdetails.password })
       if (response) {
-        console.log({ res: response, loading: loading })
-        console.warn("there was a response")
+
 
 
         dispatch(AUTHENTICATE(true));
-        dispatch(SIGNIN(response.data.others));
-        const fullname = response.data.others?.fullname;
+        dispatch(SIGNIN(response.attributes));
+        const fullname = response.attributes?.name;
         const username = fullname.split(" ")[0];
-        savetostore("accessToken", response.data?.accessToken);
         sendPushNotification(
           `Hello ${username}`,
           "Welcome back to Mekanik",

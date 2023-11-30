@@ -1,0 +1,163 @@
+type Reviews @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  text: String
+  userID: ID! @index(name: "byUser")
+  reviewer: String
+}
+
+enum Mechanicavailability {
+  AVAILABLE
+  UNAVAILABLE
+}
+
+type Message @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  text: String
+  chatroomID: ID! @index(name: "byChatroom")
+  userID: ID! @index(name: "byUser")
+}
+
+type Chatroom @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  Messages: [Message] @hasMany(indexName: "byChatroom", fields: ["id"])
+  users: [User] @manyToMany(relationName: "UserChatroom")
+  lastmessage: Message @hasOne
+  userA: String
+  userB: String
+}
+
+type Accounts @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  accountnumber: String
+  accountname: String
+  bank: String
+  userID: ID! @index(name: "byUser")
+}
+
+type Transaction @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  description: String
+  amount: String
+  date: AWSDate
+  userID: ID! @index(name: "byUser")
+}
+
+type Order @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  amount: String
+  paymentstatus: String
+  customer: User @hasOne
+  product: Products @hasOne
+}
+
+type Products @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String
+  price: String
+  deliverytimeline: String
+  quantity: String
+  details: String
+  image: String
+}
+
+enum Mechanicjobrequest {
+  ACCEPTED
+  DECLINED
+}
+
+type Mechanicjobrequests @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  price: String
+  status: Mechanicjobrequest
+  paymentrequestsent: Boolean
+  vehicle: Uservehicle @hasOne
+  mechanicid: User @hasOne
+  vehicleownerid: User @hasOne
+}
+
+enum Jobstatus {
+  ACTIVE
+  COMPLETED
+}
+
+type Mechanicjobs @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  status: Jobstatus
+  price: String
+  paymentrequestsent: Boolean
+  vehicle: Uservehicle @hasOne
+  mechanicid: User @hasOne
+  vehicleownerid: User @hasOne
+}
+
+enum Vendortype {
+  DEALER
+  MECHANIC
+}
+
+enum Usertype {
+  USER
+  VENDOR
+}
+
+type Userrepairhistory @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  date: AWSDate
+  vendorname: String
+  amountpaid: String
+  paymentmethod: String
+  repairstatus: String
+}
+
+type Uservehicle @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String
+  model: String
+  year: String
+  regno: String
+  vin: String
+  image: [String]
+  user: Userrepairhistory @hasOne
+}
+
+type Userpurchases @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  itemname: String
+  itemid: String
+  vendorname: String
+  vendorid: String
+  price: String
+  deliverystatus: String
+  userID: ID! @index(name: "byUser")
+}
+
+type User @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  fullname: String!
+  email: String!
+  phone: String
+  profileimg: String
+  homaddress: String
+  fromgoogle: Boolean
+  pushnotify: Boolean
+  emailnotify: Boolean
+  usebiometric: Boolean
+  pushtoken: String
+  rating: String
+  purchases: [Userpurchases] @hasMany(indexName: "byUser", fields: ["id"])
+  businessname: String
+  vendorapproved: Boolean
+  usertype: Usertype
+  vendortype: Vendortype
+  Transactions: [Transaction] @hasMany(indexName: "byUser", fields: ["id"])
+  Accounts: [Accounts] @hasMany(indexName: "byUser", fields: ["id"])
+  Messages: [Message] @hasMany(indexName: "byUser", fields: ["id"])
+  Chatrooms: [Chatroom] @manyToMany(relationName: "UserChatroom")
+  specialization: String
+  carsfixed: Int
+  availability: Mechanicavailability
+  verfied: Boolean
+  experience: String
+  Reviews: [Reviews] @hasMany(indexName: "byUser", fields: ["id"])
+}
+ 

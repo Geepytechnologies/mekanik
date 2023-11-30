@@ -5,6 +5,8 @@ import {
   TextInput,
   Image,
   Pressable,
+  ActivityIndicator,
+  Alert,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -19,6 +21,8 @@ import { savetostore } from "../../utils/storage";
 import { useDispatch } from "react-redux";
 import { SIGNIN } from "../../utils/redux/slices/userslice";
 import { ANDROIDCLIENTID, EXPOCLIENTID, IOSCLIENTID } from "../../../env";
+import { Auth, API, graphqlOperation } from "aws-amplify";
+import { createUser } from "../../graphql/mutations";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -99,18 +103,29 @@ const SignUpScreen = () => {
   const handleSignUp = async () => {
     setLoading(true);
     try {
-      const response = await signup(
-        userdetails.fullname,
-        userdetails.email,
-        userdetails.phone,
-        userdetails.password
-      );
+      const response = await Auth.signUp({
+        username: userdetails.email,
+        password: userdetails.password,
+        attributes: { name: userdetails.fullname, email: userdetails.email, phone_number: userdetails.phone }
+      })
       if (response) {
-        navigation.replace("signIn");
+        const newUser = {
+          id: response.userSub,
+          fullname: userdetails.fullname,
+          email: userdetails.email,
+          usertype: "USER",
+          phone: userdetails.phone
+        }
+        const userRes = await API.graphql(graphqlOperation(createUser, { input: newUser }))
+        console.log(userRes)
+        if (userRes) {
+          navigation.replace("signIn");
+
+        }
       }
     } catch (error) {
       if (error) {
-        setError({ status: true, message: error?.response.data });
+        setError({ status: true, message: error });
       }
     } finally {
       setLoading(false);

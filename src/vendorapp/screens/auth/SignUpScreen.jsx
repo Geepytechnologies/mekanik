@@ -18,6 +18,8 @@ import { signinwithgoogle } from "../../utils/usermethods";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 import { ANDROIDCLIENTID, EXPOCLIENTID, IOSCLIENTID } from "../../../../env";
+import { Auth } from "aws-amplify";
+
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -25,7 +27,14 @@ const SignUpScreen = () => {
   const [selectedValue, setSelectedValue] = useState("");
   const dispatch = useDispatch();
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState({ status: false, message: "" });
+  const [userdetails, setUserdetails] = useState({
+    fullname: "",
+    email: "",
+    phone: "",
+    password: "",
+  });
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
@@ -85,6 +94,38 @@ const SignUpScreen = () => {
       setLoading(false);
     }
   };
+  const handleFullnameChange = (text) => {
+    setUserdetails({ ...userdetails, fullname: text });
+  };
+  const handleEmailChange = (text) => {
+    setUserdetails({ ...userdetails, email: text });
+  };
+  const handlePhoneChange = (text) => {
+    setUserdetails({ ...userdetails, phone: text });
+  };
+
+  const handlePasswordChange = (text) => {
+    setUserdetails({ ...userdetails, password: text });
+  };
+  const handleSignUp = async () => {
+    setLoading(true);
+    try {
+      const response = await Auth.signUp({
+        username: userdetails.email,
+        password: userdetails.password,
+        attributes: { name: userdetails.fullname, email: userdetails.email, phone_number: userdetails.phone }
+      })
+      if (response) {
+        navigation.replace("signIn");
+      }
+    } catch (error) {
+      if (error) {
+        setError({ status: true, message: error });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -117,8 +158,18 @@ const SignUpScreen = () => {
           <View>
             <View style={styles.textbox}>
               <TextInput
+                onChangeText={(text) => handleFullnameChange(text)}
                 style={{ fontFamily: "Lexend300", fontSize: 14 }}
                 placeholder="Full Name"
+                keyboardType="default"
+                placeholderTextColor="#AFAEAE"
+              />
+            </View>
+            <View style={styles.textbox}>
+              <TextInput
+                onChangeText={(text) => handleEmailChange(text)}
+                styles={{ fontFamily: "Lexend300", fontSize: 14 }}
+                placeholder="Email"
                 keyboardType="default"
                 placeholderTextColor="#AFAEAE"
               />
@@ -129,6 +180,7 @@ const SignUpScreen = () => {
                   fontFamily: "Lexend300",
                   fontSize: 14,
                 }}
+                onChangeText={(text) => handlePhoneChange(text)}
                 placeholder="Phone Number"
                 keyboardType="default"
                 placeholderTextColor="#AFAEAE"
@@ -183,6 +235,7 @@ const SignUpScreen = () => {
             </View>
             <View style={styles.passwordbox}>
               <TextInput
+                onChangeText={(text) => handlePasswordChange(text)}
                 style={styles.passwordboxinput}
                 placeholder="Password"
                 keyboardType="default"
@@ -195,13 +248,12 @@ const SignUpScreen = () => {
                 />
               </Pressable>
             </View>
-            <Pressable
-              onPress={() =>
-                navigation.navigate("signIn", { screen: "signIn" })
-              }
-              style={styles.blackbtn}
-            >
-              <Text style={styles.btntext}>CREATE ACCOUNT</Text>
+            <Pressable onPress={handleSignUp} style={styles.blackbtn}>
+              {loading ? (
+                <ActivityIndicator size={"large"} color={"white"} />
+              ) : (
+                <Text style={styles.btntext}>CREATE ACCOUNT</Text>
+              )}
             </Pressable>
           </View>
           <View style={styles.orCon}>

@@ -14,7 +14,7 @@ import UserAppNavigator from "./src/components/navigators/UserAppNavigator";
 import globalstore from "./src/globalutils/redux/globalstore";
 import { NavigationContainer } from "@react-navigation/native";
 import SplashScreen from "./src/components/SplashScreen";
-import Amplify from "aws-amplify";
+import { Amplify, Auth } from "aws-amplify";
 import config from "./src/aws-exports";
 
 Amplify.configure(config);

@@ -2,15 +2,51 @@ import { StyleSheet, Text, View, Pressable, ScrollView } from "react-native";
 import React, { useState } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { Image } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Reviewcard from "../components/cards/Reviewcard";
 import { FlatList } from "react-native";
+import { API, Auth, graphqlOperation } from "aws-amplify"
+import { createChatroom, createUserChatroom } from "../../../graphql/mutations";
+import { chatroomExists } from "../../../services/chatRoomService";
 
 const ContactMechanic = ({ navigation }) => {
   const [text, setText] = useState("");
   // const navigation = useNavigation();
+  const route = useRoute()
+  const { user } = route.params
+
+
+  const handlePress = async () => {
+    const authUser = await Auth.currentAuthenticatedUser()
+
+    //check if we have a chatroom btw 2 users
+    const response = await chatroomExists(user.id, authUser.attributes.sub)
+    if (!response.status) {
+      const newChatRoomData = await API.graphql(graphqlOperation(createChatroom, { input: {} }))
+      if (!newChatRoomData.data?.createChatroom) {
+        console.log("Error creating chat room")
+      }
+      const newchatroom = newChatRoomData.data?.createChatroom
+
+      //add clicked user to chatroom
+      await API.graphql(graphqlOperation(createUserChatroom, { input: { chatroomId: newchatroom.id, userId: user.id } }))
+
+      //add auth user to chatroom
+      await API.graphql(graphqlOperation(createUserChatroom, { input: { chatroomId: newchatroom.id, userId: authUser.attributes.sub } }))
+
+      //navigate to chatroom
+      navigation.navigate("chatmechanic", { id: newchatroom.id, name: user.fullname })
+    } else {
+      //navigate to chatroom
+      navigation.navigate("chatmechanic", { id: response.chatroom, name: user.fullname })
+    }
+
+
+  }
+
+
   const reviewData = [
     {
       id: "1",
@@ -52,7 +88,7 @@ const ContactMechanic = ({ navigation }) => {
           <View style={styles.profileimg}>
             <Image
               style={{ width: "100%", height: "100%" }}
-              source={require("../../../../assets/images/mancartoon.png")}
+              source={{ uri: user.profileimg }}
               resizeMode="cover"
             />
           </View>
@@ -75,7 +111,7 @@ const ContactMechanic = ({ navigation }) => {
               }}
             >
               <Text style={{ fontFamily: "Lexend500", fontSize: 14 }}>
-                Suraju James Alimi
+                {user.fullname}
               </Text>
               <MaterialCommunityIcons
                 name="check-decagram"
@@ -111,7 +147,7 @@ const ContactMechanic = ({ navigation }) => {
                   fontSize: 12,
                 }}
               >
-                Available
+                {user.availability}
               </Text>
             </View>
           </View>
@@ -129,11 +165,11 @@ const ContactMechanic = ({ navigation }) => {
           >
             <View style={styles.textcon}>
               <Text style={styles.text1}>Cars fixed</Text>
-              <Text style={styles.text2}>23</Text>
+              <Text style={styles.text2}>{user.carsfixed}</Text>
             </View>
             <View style={styles.textcon}>
               <Text style={styles.text1}>Rating</Text>
-              <Text style={styles.text2}>4 / 5</Text>
+              <Text style={styles.text2}>{user.rating}</Text>
             </View>
             <View style={styles.textcon}>
               <Text style={styles.text1}>Experience</Text>
@@ -205,7 +241,7 @@ const ContactMechanic = ({ navigation }) => {
         </View>
         {/* contact button */}
         <Pressable
-          onPress={() => navigation.navigate("chatmechanic")}
+          onPress={handlePress}
           style={{
             paddingVertical: 18,
             paddingHorizontal: 24,

@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Image } from "react-native";
 import Horizontalrule from "../../../components/Horizontalrule";
@@ -13,15 +13,25 @@ import { useDispatch, useSelector } from "react-redux";
 import { SIGNOUT } from "../../../utils/redux/slices/userslice";
 import { deleteFromstore } from "../../../utils/storage";
 import { AUTHENTICATE } from "../../../utils/redux/slices/authslice";
+import { Auth, API, graphqlOperation } from "aws-amplify"
+import { getUser } from "../../../graphql/queries";
 
 const SettingsHomeScreen = ({ navigation }) => {
+  const [user, setUser] = useState()
   const { currentuser } = useSelector((state) => state.userslice);
   const { emailnotify, pushnotify, usebiometric } = currentuser;
   const dispatch = useDispatch();
-  const [biometric, setBiometric] = useState(usebiometric);
-  const [emailnotifications, setEmailnotifications] = useState(emailnotify);
-  const [pushnotifications, setPushnotifications] = useState(pushnotify);
-  console.log(currentuser);
+  const [biometric, setBiometric] = useState(user?.usebiometric);
+  const [emailnotifications, setEmailnotifications] = useState(user?.emailnotify);
+  const [pushnotifications, setPushnotifications] = useState(user?.pushnotify);
+
+  useEffect(() => {
+    const getTheUser = async () => {
+      const res = await API.graphql(graphqlOperation(getUser, { id: currentuser.sub }))
+      setUser(res.data.getUser)
+    }
+    getTheUser()
+  }, [])
   const togglebiometric = () => {
     setBiometric(!biometric);
   };
@@ -38,9 +48,15 @@ const SettingsHomeScreen = ({ navigation }) => {
     imageUrl = require("../../../../assets/images/mancartoon.png");
   }
   const signout = async () => {
-    dispatch(SIGNOUT());
-    dispatch(AUTHENTICATE(false));
-    await deleteFromstore("accessToken");
+    try {
+      await Auth.signOut();
+      // dispatch(SIGNOUT());
+      dispatch(AUTHENTICATE(false));
+      console.log('User signed out successfully');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+
   };
   return (
     <SafeAreaView
@@ -63,7 +79,7 @@ const SettingsHomeScreen = ({ navigation }) => {
         <View style={styles.contentcontainer}>
           <View style={styles.profile}>
             <View>
-              <Text style={styles.name}>{currentuser.fullname}</Text>
+              <Text style={styles.name}>{currentuser.name}</Text>
               <Text style={styles.email}>{currentuser.email}</Text>
             </View>
             <View style={styles.imgcontain}>

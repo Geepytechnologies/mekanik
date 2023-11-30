@@ -1,4 +1,27 @@
 {
+  "api": {
+    "mekanik": {
+      "dependsOn": [],
+      "output": {
+        "authConfig": {
+          "additionalAuthenticationProviders": [
+            {
+              "authenticationType": "AWS_IAM"
+            }
+          ],
+          "defaultAuthentication": {
+            "apiKeyConfig": {
+              "apiKeyExpirationDays": 30,
+              "description": "api key description"
+            },
+            "authenticationType": "API_KEY"
+          }
+        }
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "AppSync"
+    }
+  },
   "auth": {
     "mekanik": {
       "customAuth": false,
@@ -17,7 +40,11 @@
           ],
           "passwordPolicyMinLength": 8
         },
-        "signupAttributes": [],
+        "signupAttributes": [
+          "NAME",
+          "PHONE_NUMBER",
+          "EMAIL"
+        ],
         "socialProviders": [
           "GOOGLE"
         ],

@@ -6,11 +6,13 @@ import { Image } from "react-native";
 import { Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-const Usercard = () => {
+
+const Usercard = ({ user }) => {
   const navigation = useNavigation();
+
   return (
     <Pressable
-      onPress={() => navigation.navigate("contactmechanic")}
+      onPress={() => navigation.navigate("contactmechanic", { user: user })}
       style={styles.container}
     >
       <View style={styles.innercon}>
@@ -30,7 +32,7 @@ const Usercard = () => {
                 fontSize: 12,
               }}
             >
-              Available
+              {user.availability}
             </Text>
           </View>
           <View
@@ -42,7 +44,7 @@ const Usercard = () => {
             }}
           >
             <Text style={{ fontFamily: "Lexend500", fontSize: 14 }}>
-              Suraju James Alimi
+              {user.fullname}
             </Text>
             <MaterialCommunityIcons
               name="check-decagram"
@@ -73,7 +75,7 @@ const Usercard = () => {
           <View style={styles.imgcon}>
             <Image
               style={{ width: "100%", height: "100%" }}
-              source={require("../../../../../assets/images/mancartoon.png")}
+              source={{ uri: user.profileimg }}
               resizeMode="cover"
             />
           </View>
