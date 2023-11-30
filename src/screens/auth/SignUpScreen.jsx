@@ -117,7 +117,6 @@ const SignUpScreen = () => {
           phone: userdetails.phone
         }
         const userRes = await API.graphql(graphqlOperation(createUser, { input: newUser }))
-        console.log(userRes)
         if (userRes) {
           navigation.replace("signIn");
 
@@ -225,7 +224,7 @@ const SignUpScreen = () => {
         <View style={styles.orCon}>
           <Ordivider />
         </View>
-        <Pressable onPress={() => promptAsync()} style={styles.googlecon}>
+        <Pressable style={styles.googlecon}>
           <Googlelogo />
           <Text style={styles.googletext}>SIGN UP WITH GOOGLE</Text>
         </Pressable>

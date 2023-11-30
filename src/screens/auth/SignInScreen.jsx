@@ -200,7 +200,7 @@ const SignInScreen = () => {
         <View style={styles.orCon}>
           <Ordivider />
         </View>
-        <Pressable onPress={() => promptAsync()} style={styles.googlecon}>
+        <Pressable style={styles.googlecon}>
           <Googlelogo />
           <Text style={styles.googletext}>SIGN IN WITH GOOGLE</Text>
         </Pressable>
