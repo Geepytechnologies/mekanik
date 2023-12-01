@@ -24,7 +24,7 @@ import { ANDROIDCLIENTID, EXPOCLIENTID, IOSCLIENTID } from "../../../env";
 import { Auth, API, graphqlOperation } from "aws-amplify";
 import { createUser } from "../../graphql/mutations";
 
-WebBrowser.maybeCompleteAuthSession();
+
 
 const SignUpScreen = () => {
   const dispatch = useDispatch();
@@ -41,50 +41,7 @@ const SignUpScreen = () => {
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
-  const [request, response, promptAsync] = Google.useAuthRequest(
-    {
-      androidClientId:
-        ANDROIDCLIENTID,
-      expoClientId:
-        EXPOCLIENTID,
-      iosClientId:
-        IOSCLIENTID,
-      scopes: ["profile", "email", "openid"],
-    }
-    // { authorizationEndpoint: "https://accounts.google.com/o/oauth2/v2/auth" }
-  );
-  useEffect(() => {
-    WebBrowser.warmUpAsync();
-    return () => {
-      WebBrowser.coolDownAsync();
-    };
-  }, []);
 
-  useEffect(() => {
-    signInWithGoogle();
-  }, [response]);
-
-  const signInWithGoogle = async () => {
-    if (response?.type === "success") {
-      const token =
-        response.authentication?.accessToken ||
-        response.params?.access_token ||
-        response.params?.id_token;
-      await getUserInfo(token);
-    }
-  };
-
-  const getUserInfo = async (accessToken) => {
-    if (!accessToken) return;
-    let response = await fetch("https://www.googleapis.com/userinfo/v2/me", {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-    const userinfo = await response.json();
-    await handleGoogleSignUp(userinfo);
-    setUser(userinfo);
-  };
 
   const handleFullnameChange = (text) => {
     setUserdetails({ ...userdetails, fullname: text });
@@ -131,17 +88,6 @@ const SignUpScreen = () => {
     }
   };
 
-  const handleGoogleSignUp = async (data) => {
-    try {
-      const response = await signinwithgoogle(data);
-      dispatch(SIGNIN(response.others));
-      savetostore("accessToken", response?.accessToken);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.innercon}>

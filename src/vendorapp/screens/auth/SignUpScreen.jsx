@@ -14,14 +14,10 @@ import { useNavigation } from "@react-navigation/native";
 import GoogleLogo from "../../../components/svgs/Google";
 import Ordivider from "../../../components/Ordivider";
 import { Picker } from "@react-native-picker/picker";
-import { signinwithgoogle } from "../../utils/usermethods";
-import * as WebBrowser from "expo-web-browser";
-import * as Google from "expo-auth-session/providers/google";
-import { ANDROIDCLIENTID, EXPOCLIENTID, IOSCLIENTID } from "../../../../env";
 import { Auth } from "aws-amplify";
+import { useDispatch } from "react-redux";
 
 
-WebBrowser.maybeCompleteAuthSession();
 
 const SignUpScreen = () => {
   const [selectedValue, setSelectedValue] = useState("");
@@ -39,61 +35,9 @@ const SignUpScreen = () => {
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
-  const [request, response, promptAsync] = Google.useAuthRequest(
-    {
-      androidClientId:
-        ANDROIDCLIENTID,
-      expoClientId:
-        EXPOCLIENTID,
-      iosClientId:
-        IOSCLIENTID,
-      scopes: ["profile", "email", "openid"],
-    }
-    // { authorizationEndpoint: "https://accounts.google.com/o/oauth2/v2/auth" }
-  );
-  useEffect(() => {
-    WebBrowser.warmUpAsync();
-    return () => {
-      WebBrowser.coolDownAsync();
-    };
-  }, []);
 
-  useEffect(() => {
-    signInWithGoogle();
-  }, [response]);
 
-  const signInWithGoogle = async () => {
-    if (response?.type === "success") {
-      const token =
-        response.authentication?.accessToken ||
-        response.params?.access_token ||
-        response.params?.id_token;
-      await getUserInfo(token);
-    }
-  };
 
-  const getUserInfo = async (accessToken) => {
-    if (!accessToken) return;
-    let response = await fetch("https://www.googleapis.com/userinfo/v2/me", {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-    const userinfo = await response.json();
-    await handleGoogleSignUp(userinfo);
-    setUser(userinfo);
-  };
-  const handleGoogleSignUp = async (data) => {
-    try {
-      const response = await signinwithgoogle(data);
-      dispatch(SIGNIN(response.others));
-      savetostore("accessToken", response?.accessToken);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
   const handleFullnameChange = (text) => {
     setUserdetails({ ...userdetails, fullname: text });
   };

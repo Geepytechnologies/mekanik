@@ -12,21 +12,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import Googlelogo from "../../components/svgs/Google";
 import Ordivider from "../../components/Ordivider";
-import * as WebBrowser from "expo-web-browser";
-import * as Google from "expo-auth-session/providers/google";
-import { makeRedirectUri } from "expo-auth-session";
-import { signin, signinwithgoogle } from "../../utils/usermethods";
 import { ActivityIndicator } from "react-native";
-import { savetostore } from "../../utils/storage";
 import { useDispatch } from "react-redux";
 import { SIGNIN } from "../../utils/redux/slices/userslice";
 import { usePushNotifications } from "../../hooks/usePushNotifications";
 import { AUTHENTICATE } from "../../utils/redux/slices/authslice";
-import { ANDROIDCLIENTID, API_URL, EXPOCLIENTID, IOSCLIENTID } from "../../../env";
-import axios from "axios";
 import { Auth } from "aws-amplify";
 
-WebBrowser.maybeCompleteAuthSession();
 
 const SignInScreen = () => {
   const { sendPushNotification } = usePushNotifications();
@@ -40,50 +32,9 @@ const SignInScreen = () => {
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
-  const [request, response, promptAsync] = Google.useAuthRequest(
-    {
-      androidClientId:
-        ANDROIDCLIENTID,
-      expoClientId:
-        EXPOCLIENTID,
-      iosClientId:
-        IOSCLIENTID,
-      scopes: ["profile", "email", "openid"],
-    }
-    // { authorizationEndpoint: "https://accounts.google.com/o/oauth2/v2/auth" }
-  );
-  useEffect(() => {
-    WebBrowser.warmUpAsync();
-    return () => {
-      WebBrowser.coolDownAsync();
-    };
-  }, []);
 
-  useEffect(() => {
-    signInWithGoogle();
-  }, [response]);
 
-  const signInWithGoogle = async () => {
-    if (response?.type === "success") {
-      const token =
-        response.authentication?.accessToken ||
-        response.params?.access_token ||
-        response.params?.id_token;
-      await getUserInfo(token);
-    }
-  };
 
-  const getUserInfo = async (accessToken) => {
-    if (!accessToken) return;
-    let response = await fetch("https://www.googleapis.com/userinfo/v2/me", {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-    const userinfo = await response.json();
-    await handleGoogleSignIn(userinfo);
-    setUser(userinfo);
-  };
   const handleEmailChange = (text) => {
     setError({ status: false, message: "" });
     setUserdetails({ ...userdetails, email: text });
@@ -134,21 +85,7 @@ const SignInScreen = () => {
     await handleSignIn();
   };
 
-  const handleGoogleSignIn = async (data) => {
-    try {
-      const response = await signinwithgoogle(data);
-      dispatch(AUTHENTICATE(true));
-      dispatch(SIGNIN(response.others));
-      const fullname = response.others?.fullname;
-      const username = fullname.split(" ")[0];
-      savetostore("accessToken", response?.accessToken);
-      sendPushNotification(`Hello ${username}`, "Welcome back to Mekanik", {});
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.innercon}>
